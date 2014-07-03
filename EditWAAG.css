@@ -1,0 +1,19 @@
+.dataSection{margin-bottom:10px; border:1px solid #000; overflow:hidden;}
+.metaData{display : none;}
+div.dataSection ul{list-style-type:none; margin:0px; padding:0px; width:325px;}
+.dataSection_wrapper{float:left; margin-right:10px;}
+div.dataSection ul li:first-child{background-color:#95C14D!important; display:inline-block; width:100%;}
+div.dataSection ul li{clear:both; padding:3px 0px;}
+div.dataSection ul li:nth-child(even){background-color:#F3F3F3; }
+div.dataSection ul li:first-child span.rName, div.dataSection ul li:first-child span.sectionHeading{float:left; margin-left:24px;}
+div.dataSection ul li:first-child span.metaData{float:left;}
+div.dataSection ul li:first-child span.rCost{float:right; margin-right:5px;}
+
+div.dataSection ul li.sortableItem{width:100%;}
+div.dataSection ul li.sortableItem span.rName{float:left;}
+div.dataSection ul li.sortableItem span.rName {float:none;}
+div.dataSection ul li.sortableItem{float:left;}
+div.dataSection ul li.sortableItem span.rCost{float:right; margin-right:5px;}
+
+
+div#button-controls{float:none; clear:both;}

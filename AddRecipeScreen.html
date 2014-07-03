@@ -1,0 +1,1347 @@
+<html>
+	<head>
+		<!-- Jquery $ JQuery UI -->
+			<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+			<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/jquery-ui.min.js"></script>
+		<!-- Jquery $ JQuery UI -->
+		
+		<!-- EditWAAG Style Sheet -->
+			<link rel="stylesheet" type="text/css" href="EditWAAG.css">
+		<!-- EditWAAG Style Sheet -->
+		
+		<!-- Mustache -->
+			<script type="text/javascript" src="jquery.mustache.js"></script>
+			<script type="text/javascript" src="mustache.js"></script>
+		<!-- Mustache -->
+		
+		<!-- Tine MCE -->
+			<script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+		<!-- Tine MCE -->
+		
+		<style>
+			/*remove when merge in pmenu_master*/
+				body,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,p,blockquote,th,td{margin: 0;padding: 0;border: 0;}
+				body {font-family: Arial, Helvetica;font-size:75%;}
+				p{margin:5px 0px 5px 0px;}
+				table,tr,td {font-size: 1em;border-collapse: collapse;}
+				h1,h2,h3 {font-family: "Segoe UI", Georgia, Arial, Helvetica;}
+				h1 {font-size: 1.8em;color: #3e79ff;padding: 10px 0 16px 0;}
+				h2 {font-size: 1.5em;color: #3e79ff;padding: 10px 0 14px 0;}
+				h3 {font-size: 1.2em;padding: 10px 0 12px 0;color: #005BA8;}
+				h3.sectionHead {font-size: 1.2em;color: #3e79ff;}
+				h4,h5,h6 {font-size: 1em;margin: 0px 0px 5px 0px;}
+				h4.addressHead,h4.phoneHead {margin-left: 165px;margin-top: 5px;}
+				img {border: 0px;}
+				*:focus {outline: none!important;}
+				ol,ul {list-style-image: none;list-style-position: outside;list-style-type: none;}
+				input[type=text]:focus, textarea:focus {outline: none!important;border:1px solid #ccc!important;}
+				label{font-weight:bold; float: left;width: 100px !important; text-align:right!important; margin:3px 6px 3px 0px!important;}
+				input, select{float: left; width: 245px!important; text-align:left; border:1px solid #ccc;}
+				input[type="radio"], input[type="checkbox"]{float: left; width:auto!important;}
+			/*remove when merge in pmenu_master*/
+			
+			.hideContent{display : none;}
+			
+			fieldset{border: 1px solid #0061AA;background-color: #e8edf7;margin: 5px 0 15px 10px !important;padding: 20px 10px 10px !important;position:relative;word-wrap: break-word;}
+			
+			legend{border: 1px solid #0061AA;background-color: #fff;margin: 5px!important;padding: 5px !important;position: relative;word-wrap:break-word;}
+			
+			.cr-MainWrapper{border:1px solid #ccc; padding: 10px !important; overflow:hidden; margin-left: 10px;}
+			.cr-info-left-section{width:49%; float:left; margin-right:1%;}
+			.cr-info-right-section{width:49%; float:left;}
+			#add-step-button{float:right; margin:5px 0px;}
+			.cr-names-en, .cr-names-fr{width:49%; float:left; margin-right:1%;}
+			.data-Leftsection{width:95%; float:left; clear:both;}
+			.data-Rightsection{width:95%; float:left; clear:both;}
+			.crMandatoryInput{color:red; font-size:.7em;}
+			.label{font-weight:bold; float: left;width: auto!important; text-align:left!important;}
+			.cr-lang-filters{clear:right; overflow: hidden;}
+			.smallSelect{float: left; width: 80px!important; text-align:left; border:1px solid #ccc; margin-left:3px;}
+			.cr-preparation-step{border:1px solid #ccc; overflow:hidden; margin:0px 0px 10px 10px; clear:both;}
+			.cr-preparation-step-header{border-bottom:1px solid #ccc; padding: 10px !important; overflow:hidden; background-color:#f5f5f5;}
+			.cr-preparation-step-header h3{color:#333; float:left; margin:0px; padding:0px;}
+			.cr-preparation-step-header a{float:right; margin:0px; padding:0px;}
+			.step-DataSection {margin: 10px;}
+			.step-ingredients-header{border-bottom:1px solid #0060aa; font-weight:bold; font-size:1.2em;margin-left: 15px; line-height:28px;}
+			.step-ingredients-header button{float:right;}
+			.ingredient-item{clear:both;}
+			.step-Input{width: 85px!important; margin-right:3px;}
+			.step-ingredients-list{margin:3px; overflow:hidden;}
+			.step-instructions-left, .step-instructions-right{width:49%; float:left; margin-right:1%; margin-left:15px;}
+			.instructionHeader{}
+		</style>
+		
+	</head>
+	<body>
+		<div id="cr-basic-info" name="cr-basic-info"></div>
+		<div id="cr-usage-info" class="cr-MainWrapper" name="cr-usage-info"></div>
+		<div id="cr-preparation-steps-info" name="cr-preparation-steps-info"></div>
+		<div id="cr-nutritional-info" name="cr-nutritional-info"></div>
+		<div id="cr-notes-info" name="cr-notes-info"></div>
+		<div id="cr-controls" name="cr-controls"></div>
+		
+		<script type="text/javascript">
+			var cr_basic_info_tepmplate = "cr-basic-info-template";
+			var cr_usage_info_tepmplate = "cr-usage-info-template";
+			
+			var cr_preparation_steps_info_scaffolding_tepmplate = "cr-usage-info-scaffolding-template";			
+			var cr_step_header_tepmplate = "cr_step_header_tepmplate";
+			var cr_step_ingredients_tepmplate = "cr_step_ingredients_tepmplate";
+			var cr_step_instructions_tepmplate = "cr_step_instructions_tepmplate";
+			
+			var cr_nutritional_info_tepmplate = "cr-nutritional-info-template";
+			var cr_admin_notes_tepmplate = "cr-admin-notes-template";
+			var cr_controls_tepmplate = "cr-controls-template";
+			var data = 
+{	
+	"showAllLocaleFields" 	: true,
+	
+	"showENLocaleFields"  : true,
+	
+	"showFRLocaleFields"  : true,
+	
+//			Create Recipe Field Set Section
+	"crBasicInfoSec" : {
+	
+							"fieldSetLegend"		: 	"Create Recipe",//Locale Based Value
+	
+							"langFilterControls"	:	{
+															"mandatory"				: true,
+															"langFilterText"		: "Language",//Locale Based
+															"langFilterEnRadio"		: {
+																						"label"			: "English",//Locale Based
+																						"checked"	: false
+																					  },
+															"langFilterFrRadio"		: {
+																						"label"			: "French",//Locale Based
+																						"checked"	: false
+																					  },
+															"bothLangFilterFrRadio"	: {
+																						"label"			: "Both",//Locale Based
+																						"checked"	: true
+																					  }
+														},
+							"enInfo"				: 	{
+															"show"					: true,
+															"crNameInput"			: {
+																						//"id"			: "cr-en-name",
+																						"value"			: null,
+																						"label"			: "Name",//Locale Based
+																						"mandatory"		: true
+																					  },
+														    "crFriendlyNameInput"	: {
+																						//"id"			: "cr-en-friendly-name",
+																						"value"			: null,
+																						"label"			: "Friendly Name",//Locale Based
+																						"mandatory"		: false
+																					  }
+														},
+							"frInfo"				: 	{
+															"show"					: true,
+															"crNameInput"			: {
+																						//"id"			: "cr-fr-name",
+																						"value"			: null,
+																						"label"			: "Nom",//Locale Based
+																						"mandatory"		: true
+																					  },
+														    "crFriendlyNameInput"	: {
+																						//"id"			: "cr-fr-friendly-name",
+																						"value"			: null,
+																						"label"			: "Le Nom",//Locale Based
+																						"mandatory"		: false
+																					  }
+														}
+					   },					   
+//			Recipe Usage Info Section
+    "crUsageInfoSec" : {
+							"recServingInput"		:	{
+															//"id"					: "cr-rec-serving",
+															"value"					: null,
+															"label"					: "Recipe Serving",//Locale Based
+															"mandatory"				: true
+														},
+							"portionSizeMetInput"	:	{
+															//"id"					: "cr-por-size-metric",
+															"value"					: null,
+															"label"					: "Portion Size(m)",//Locale Based
+															"mandatory"				: false,
+															"portionUnitMetCombo"	: {
+																						"id" 		: "portion-units-metric",
+																						"unitList"	: [
+																									    { "name" : "slice" },
+																										{ "name" : "chitank" }
+																									  ],
+																						"value"		: null
+																					  }
+														},
+							"portionSizeImpInput"	:	{
+														//	"id"					: "cr-por-size-imperial",
+															"value"					: null,
+															"label"					: "Portion Size(i)",//Locale Based
+															"mandatory"				: false,
+															"portionUnitImpCombo"	: {
+																						"id" 		: "portion-units-imperial",
+																						"unitList"	: [ { "name" : "slice" } ],
+																						"value"		: null
+																					  }
+														},
+							"servingUtensilCombo"	:	{
+															//"id"					: "serving-utensil-combo",
+															"label"					: "Serving Utensil",//Locale Based
+															"utensilList"			: [ { "name" : "Tongs" } ],
+															"value"				    : null
+														},
+							"recipeCategoriesCombo" :	{
+															//"id"					: "rec-categories-combo",
+															"label"					: "Categories",//Locale Based
+															"categoryList"			: [ { "name" : "Accompaniments" } ],
+															"mandatory"				: true,
+															"value"				    : null
+														},
+							"estimatedCostInput"	:	{
+															//"id"					: "est-cost-input",
+															"label"					: "Estimated Cost",//Locale Based
+															"value"					: null,
+															"mandatory"				: true
+														},
+							"therapeuticDimensionMultiSelect"	: {
+																	//"id"			: "therapeutic-dimentsion-multi-select",
+																	"label"			: "Therapeutic Dimensions",//Locale Based
+																	"therapeuticsList" : [ { "name" : "Gluten Free" }, { "name" : "Lacto Ovo Vegetarian"}, { "name" : "Modified Diabetic Maintenance" } ],
+																	"mandatory"		: true,
+																	"value"    	    : null
+																  },
+							"crStatusCombo"			: 	{
+																//"id"				: "cr-status-text",
+																"label"				: "Recipe Status",//Locale Based
+																"statusList"		: [ { "name" : "Draft" } ],
+																"mandatory"			: false,
+															    "value"             : null
+														}
+					   },
+//			Custom Recipe Preparation Steps
+	"preparationStepsSec"	:	{								
+//								Making it common is intended to reduce the JSON response size
+								"stepsCommonUI"	: {
+													"stepLabel" 		: "Step",//Locale Based
+													"ingeredientsLabel"	: "Ingredients",//Locale Based
+													"addIngredientsLabel": "Add ingredients",//Locale Based
+													"instructionsLabel"	: "Instructions",//Locale Based
+													"addStepButton"		: {
+																			"image"		: "",//Image Path
+																			"label" 	: "Add Steps",//Locale Based
+																			"enabled"	: true,
+																			"show"		: true
+																		  },
+													"deleteStepButton"	: {
+																			"image"	: "",//Image Path
+																			"label" : "Delete Step"//Locale Based
+																		  },
+													
+													"ingrNameInputEN"		: {
+																				"label"		: "Name",//Locale Based
+																				"manadatory": false
+																			  },
+													"ingrNameInputFR"		: {
+																				"label"		: "Name FR",//Locale Based
+																				"mandatory"	: false
+																			  },
+													"amountMetricInput"		: {
+																				"label"		: "Amount(I)",//Locale Based
+																				"mandatory" : false
+																			  },
+													"amountImperialInput"	: {
+																				"label"		: "Amount(M)",//Locale Based
+																				"mandatory"	: false
+																			  },
+													"amountUnitsImperialCombo"		: [ { "name" : "each" } ],//From Data Base
+													"amountUnitMetricCombo"			: [ { "name" : "each" } ],//From Data Base
+													"moveUpButton"			: {
+																				"image"		: "",//Image Path
+																				"title"		: "Move Up"//Locale Based
+																			  },
+													"moveDownButton"		: {
+																				"image"		: "",//Image Path
+																				"title"		: "Move Down"//Locale Based
+																			  },
+													"deleteButton"			: {
+																				"image"		: "",//Image Path
+																				"title"		: "Delete"//Locale Based
+																			  },
+													"instructions"			: {
+																				"enTextArea" : {
+																								"mandatory"	: false,
+																								"label"		: "Instructions",//Locale Based Value
+																							   },
+																			    "frTextArea" : {
+																								"mandatory"	: false,
+																								"label"		: "Instructions FR",//Locale Based Value
+																							   }
+																			  }
+												  },
+								
+								"steps" : [
+											{
+												"index"			: 	1,
+												"ingredients"	:	[
+																		{
+																			"ingrNameInputEN" 		: {
+																										"value" : null
+																									  },
+																			"ingrNameInputFR" 		: {
+																										"value" : null
+																									  },
+																		    "amountMetricInput"		: {
+																									    "value" : null
+																									  },
+																			"amountImperialInput"	: {
+																										"value"	: null
+																									  },
+																		    "moveUpButton"			: {},
+																			"moveDownButton"		: {},
+																			"deleteButton"			: {},
+																		}
+																	],
+												"instructions"	:	{
+																		"enTextArea"	: {
+																							"value"		: "Go Ahead!"
+																					      },
+																		"frTextArea"	: {
+																							"value"		: null
+																						  }
+																    }
+											},
+											{
+												"index"			:	2,
+												"ingredients"	:	[
+																		{
+																			"ingrNameInputEN" 		: {
+																										"value" : null
+																									  },
+																			"ingrNameInputFR" 		: {
+																										"value" : null
+																									  },
+																		    "amountMetricInput"		: {
+																									    "value" : null
+																									  },
+																			"amountImperialInput"	: {
+																										"value"	: null
+																									  },
+																		    "moveUpButton"			: {},
+																			"moveDownButton"		: {},
+																			"deleteButton"			: {},
+																		}
+																	],
+												"instructions"	:	{
+																		"enTextArea"	: {
+																							"value"		: null
+																					      },
+																		"frTextArea"	: {
+																							"value"		: null
+																						  }
+																    }
+											}
+										  ]
+							},
+//	Nutritional Information Section
+	"nutritionalInfoSec"	: {
+								"headerLabel" : "*Nutritional Info (per serving)",//Locale Based
+								"commonUI" : {
+												"accuracyLabel"	: "Is Accurate"//Locale Based
+											 },
+								"calories" : {
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Calories",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "Kcal"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"cholestrol": {
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Cholestrol",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "mg"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"calcium"	:{
+											    "mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Calcium",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "mg"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"saturatedFat" : {
+												"mandatory" : true,
+												"input" : 	 {
+																"label" 	: "Saturated Fat",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "g"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: true
+															 }
+											 },
+								"sugars"	:{
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Sugars",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "g"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },								
+								"protein"	:{
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Protein",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "g"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"carbohydrate" : {
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Carbohydrate",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "g"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"iron"		:{
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Iron",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "mg"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"fattyAcids":{
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Fatty Acids, Trans Fat",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "g"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"sodium"	:{
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Sodium",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "mg"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"fat"		:{
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Fat",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "g"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"dietaryFibre":{
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Dietary Fibre",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "g"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"vitaminARAE":{
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Vitamin A RAE",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "mcg"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"vitaminC"	 :{
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Vitamin C",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "mg"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 },
+								"vitaminARE"	 :{
+												"mandatory" : false,
+												"input" : 	 {
+																"label" 	: "Vitamin A RE",//Locale Based
+																"value" 	: null,
+																"unitLabel"	: "RE"//Locale Based
+														     },
+												"accuracy" : {
+																"checked"	: false
+															 }
+											 }
+							  },
+	"crAdminNotesSec"		: {
+								"adminNotesEnTextArea" : {
+															"mandatory"	: false,
+															"label" : "Admin Notes EN",//Locale Based Value
+															"value" : null
+													     },
+								"adminNotesFrTextArea" : {
+															"mandatory"	: false,
+															"label" : "Admin Notes FR",//Locale Based Value
+															"value" : null
+														 }
+							  },
+	"crControlsSec"			: {
+								"saveCRButton" 	 : {
+														"label" : "Save",//Locale Based Value														
+												   },
+								"cancelCRButton" : {
+												        "label" : "Cancel",//Locale Based Value
+												   },
+						      }
+};
+
+//---------Function Calls Starts
+main();
+//---------Function Calls Ends
+
+//---------General Function Definitions Starts
+
+function main(){
+	ignition();
+}
+
+function ignition(){
+	renderTemplate("#cr-basic-info", cr_basic_info_tepmplate, getCustomRecipeBasicInfoTemplate(), data);
+	renderTemplate("#cr-usage-info", cr_usage_info_tepmplate, getCustomRecipeUsageInfoTemplate(), data);
+	
+	//---------Generate Preparation Steps Starts
+		//---------Generate Preparation Steps Scaffolding Starts
+		renderTemplate("#cr-preparation-steps-info", cr_preparation_steps_info_scaffolding_tepmplate, getPrepearationStepsScaffoldingTemplate(), data);
+		//---------Generate Preparation Steps Scaffolding Ends
+		//---------Generate Individual Steps Based Upon Above Scaffolding Starts
+		$.each(data.preparationStepsSec.steps , function(index, step){
+			renderIndividualStep(step);
+		});
+		//---------Generate Individual Steps Based Upon Above Scaffolding Ends
+	//---------Generate Preparation Steps Ends	
+	renderTemplate("#cr-nutritional-info", cr_nutritional_info_tepmplate, getNutritionalsInfoTemplate(), data);	
+	renderTemplate("#cr-notes-info", cr_admin_notes_tepmplate, getCRAdminNotesTemplate(), data);
+	renderTemplate("#cr-controls", cr_controls_tepmplate, getCRControlsTemplate(), data);
+	//---------Making the steps sortable
+	$("#cr-preparation-steps-list").sortable(
+		{
+			"handle"	: ".cr-preparation-step-header",
+			"axis"		: "y"
+		}
+	);
+}
+
+function renderIndividualStep(step){	
+	generateStepHeader(step);
+	generateStepIngredients(step);
+	generateStepInstructions(step);
+}
+
+function generateStepHeader(step){
+	//---------Step Header Generation Starts
+	renderTemplate(
+				"#step-" + step.index + "-header",
+				cr_step_header_tepmplate, getCRHeaderTemplate(),
+				{ "ui" 	: data.preparationStepsSec.stepsCommonUI, "step" : step }
+	);
+	//---------Step Header Generation Ends
+}
+
+function generateStepIngredients(step){
+	//---------Step Ingredients Generation Starts
+	renderTemplate(
+				"#step-" + step.index + "-ingredients",
+				cr_step_ingredients_tepmplate, getCRIngredientsTemplate(),
+				{
+				  "showAllLocaleFields" : data.showAllLocaleFields,
+				  "showENLocaleFields"  : data.showENLocaleFields,	
+			      "showFRLocaleFields"  : data.showFRLocaleFields,
+				  "ui" 	 : data.preparationStepsSec.stepsCommonUI,
+				  "step" : step
+			    }
+	);
+	//---------Step Ingredients Generation Ends
+}
+
+function generateStepInstructions(step){
+	//---------Step Instructions Generation Starts
+	renderTemplate(				  
+				"#step-" + step.index + "-instructions",
+				cr_step_instructions_tepmplate, getCRStepInstructionsTemplate(step),
+				{
+				  "showAllLocaleFields" : data.showAllLocaleFields,
+				  "showENLocaleFields"  : data.showENLocaleFields,	
+			      "showFRLocaleFields"  : data.showFRLocaleFields,
+				  "ui" 	 : data.preparationStepsSec.stepsCommonUI, 
+				  "step" : step
+			    }
+	);	
+	//---------Step Instructions Generation Ends
+	//---------Text Area To rich Text Editor Conversion Starts
+	tinyMCE.init({
+		mode : "exact",
+		elements: "step-" + step.index + "-en-instructions, step-" + step.index + "-fr-instructions",
+		theme : "advanced",
+		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect",
+		theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,image,cleanup,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+		theme_advanced_buttons3 : "",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_statusbar_location : "",
+		plugins : 'inlinepopups'
+	});
+	//---------Text Area To rich Text Editor Conversion Ends
+}
+
+/*
+	A Generic Function to Render Mustache Templates On This Screen
+*/
+function renderTemplate(selector, tempName, templateDef, data){
+	$(selector).empty();
+	$.Mustache.add(tempName, templateDef);
+	$(selector).mustache(tempName, data);
+	//Clearing out the templates to save ??? :-)
+	$.Mustache.clear();
+}
+//---------General Function Definitions Ends
+
+//---------Template Function Definitions Starts
+
+function getCRHeaderTemplate(){
+	return "<h3> {{ ui.stepLabel }}" + " " + "{{ step.index }} </h3>"		  
+		   //---------Delete Step Button Starts
+		  +"<a title='{{ ui.deleteStepButton.label }}'>"
+			+"{{ ui.deleteStepButton.label }}"
+		  +"</a>";
+		   //---------Delete Step Button Ends		   			
+}
+
+function getCRIngredientsTemplate(){
+	return "<div class=step-ingredients-header>"
+				+"{{ ui.ingeredientsLabel }}"
+				+"<button>{{ ui.addIngredientsLabel }}</button>"
+		  +"</div>"
+		  +"<div class='step-ingredients-list'>"
+			+"<div name='ingredient-item' class='ingredient-item'>"
+				+"{{ #step.ingredients }}"																			
+							//---------Ingredient Name Input En Starts
+							+"{{ #showENLocaleFields }}"
+								+"{{ #ui.ingrNameInputEN.mandatory }}"
+									+"<span class='crMandatoryInput'>*</span>"
+								+"{{ /ui.ingrNameInputEN.mandatory }}"
+								+"<label for='ingredient-name-input-en'>{{ ui.ingrNameInputEN.label }}</label>"
+								+"<input name='ingredient-name-input-en' value='{{ step.ingrNameInputEN.value }}' />"
+							+"{{ /showENLocaleFields }}"
+							//---------Ingredient Name Input En Ends
+							//---------Ingredient Name Input Fr Starts
+							+"{{ #showFRLocaleFields }}"
+								+"{{ #ui.ingrNameInputFR.mandatory }}"
+									+"<span class='crMandatoryInput'>*</span>"
+								+"{{ /ui.ingrNameInputFR.mandatory }}"
+								+"<label for='ingredient-name-input-fr'>{{ ui.ingrNameInputFR.label }}</label>"
+								+"<input name='ingredient-name-input-fr' value='{{ step.ingrNameInputFR.value }}' />"
+							+"{{ /showFRLocaleFields }}"
+							//---------Ingredient Name Input Fr Ends
+							//---------Ingredient Amount Input Metric Starts
+							+"{{ #ui.amountMetricInput.mandatory }}"
+								+"<span class='crMandatoryInput'>*</span>"
+							+"{{ /ui.amountMetricInput.mandatory }}"
+							+"<label for='ingredient-amount-input-met'>"
+								+"{{ ui.amountMetricInput.label }}"
+							+"</label>"
+							+"<input name='ingredient-amount-input-met' class='step-Input' value='{{ step.amountMetricInput.value }}' />"
+							+"<select name='ingr-amount-units-combo-met' class='step-Input'>"
+								+"{{ #ui.amountUnitMetricCombo }}"
+									+"<option>"
+										+"{{ name }}"
+									+"</option>"
+								+"{{ /ui.amountUnitMetricCombo }}"
+							+"</select>"
+							//---------Ingredient Amount Input Metric Ends
+							//---------Ingredient Amount Input Imperial Starts
+							+"{{ #ui.amountImperialInput.mandatory }}"
+								+"<span class='crMandatoryInput'>*</span>"
+							+"{{ /ui.amountImperialInput.mandatory }}"
+							+"<label for='ingredient-amount-input-imp'>"
+								+"{{ ui.amountImperialInput.label }}"
+							+"</label>"
+							+"<input name='ingredient-name-input-imp' class='step-Input' value='{{ step.amountImperialInput.value }}' />"
+							+"<select name='ingr-amount-units-combo-imp' class='step-Input'>"
+								+"{{ #ui.amountUnitsImperialCombo }}"
+									+"<option>"
+										+"{{ name }}"
+									+"</option>"
+								+"{{ /ui.amountUnitsImperialCombo }}"
+							+"</select>"
+							//---------Ingredient Amount Input Imperial Ends
+							//---------Move Ingredient Up Button Starts
+							+"<a href='#'"
+								+" title='{{ ui.moveUpButton.title }}'>"
+								+"{{ ui.moveUpButton.title }}"
+							+"</a>"
+							//---------Move Ingredient Up Button Ends
+							//---------Move Ingredient Down Button Starts
+							+"<a href='#' "
+								+"title='{{ ui.moveDownButton.title }}'>"
+								+"{{ ui.moveDownButton.title }}"
+							+"</a>"
+							//---------Move Ingredient Down Button Ends
+							//---------Delete Ingredient Up Button Starts
+							+"<a href='#' "
+								+"title='{{ ui.deleteButton.title }}'>"
+								+"{{ ui.deleteButton.title }}"
+							+"</a>"
+							//---------Delete Ingredient Up Button Ends
+				+"{{ /step.ingredients }}"
+			+"</div>"
+		  +"</div>"
+}
+
+function getCRStepInstructionsTemplate(step){
+	return "<div class='step-instructions-header'></div>"
+		  +"<div class='step-instructions-content'>"
+			+"{{ #showENLocaleFields }}"
+				+"{{ #ui.instructions.enTextArea.mandatory }}"
+					+"<span class='crMandatoryInput'>*</span>"
+				+"{{ /ui.instructions.enTextArea.mandatory }}"
+				+"<div class='step-instructions-left'>"
+					+"<div class='instructionHeader'>"
+						+"<label for='step-{{ step.index }}-en-instructions'>"
+							+"{{ ui.instructions.enTextArea.label }}"
+						+"</label>"
+					+"</div>"
+					+"<textarea id='step-{{ step.index }}-en-instructions' >"
+						+"{{ step.instructions.enTextArea.value }}"
+					+"</textarea>"
+				+"</div>"
+			+"{{ /showENLocaleFields }}"
+			+"{{ #showFRLocaleFields }}"
+				+"{{ #ui.instructions.frTextArea.mandatory }}"
+					+"<span class='crMandatoryInput'>*</span>"
+				+"{{ /ui.instructions.frTextArea.mandatory }}"
+				+"<div class='step-instructions-right'>"
+					+"<label for='step-{{ step.index }}-fr-instructions'>"
+						+"{{ ui.instructions.frTextArea.label }}"
+					+"</label>"
+					+"<textarea id='step-{{ step.index }}-fr-instructions'>"
+						+"{{ step.instructions.frTextArea.value }}"
+					+"</textarea>"
+				+"</div>"
+			+"{{ /showFRLocaleFields }}"
+		  +"</div>";
+}
+
+function getPrepearationStepsScaffoldingTemplate(){
+	return "<div id='preparation-steps-header-controls'>"
+			+"<button id='add-step-button' name='add-step-button' >{{ preparationStepsSec.stepsCommonUI.addStepButton.label }}</button>"			
+		  +"</div>"
+		  +"<div id='cr-preparation-steps-list' name='cr-preparation-steps-list'>"
+				+"{{ #preparationStepsSec.steps }}"
+					//---------Container For A Step Starts
+					+"<div id='step-{{ index }}' class='cr-preparation-step'>"
+						//+getStepContentTemplate()
+						//---------Collapsible Section Header Starts
+						+"<div id='step-{{ index }}-header' class='cr-preparation-step-header' onclick='expandOrCollapseEH({{ index }})'></div>"
+						//---------Collapsible Section Header Ends
+						//---------Collapsible Section Content Starts
+						+"<div id='step-{{ index }}-content' class='cr-preparation-step-content'>"
+							//---------Step Ingredients Starts
+							+"<div id='step-{{ index }}-ingredients' class='step-DataSection'>"
+								+"<div class='step-ingredients-header'>"
+								+"</div>"
+								+"<div class='step-ingredients-list'>"
+								+"</div>"
+							+"</div>"
+							//---------Step Ingredients Ends
+							//---------Step Instructions Starts
+							+"<div id='step-{{ index }}-instructions'></div>"
+							//---------Step Instructions Ends
+						+"</div>"
+						//---------Collapsible Section Content Ends
+					+"</div>"
+					//---------Container For A Step Ends
+				+"{{ /preparationStepsSec.steps }}"
+		  +"</div>";
+}
+
+function getCustomRecipeBasicInfoTemplate(){
+	return "<fieldset id='cr-basic-info-fieldset' name='cr-basic-info-fieldset'>"
+				+"<legend>"
+					+"{{ crBasicInfoSec.fieldSetLegend }}"
+				+"</legend>"
+				
+				//---------Language Filter Controls DIV Starts
+				+"<div id='cr-lang-filters' class='cr-lang-filters' name='cr-lang-filters'>"
+					+"<label>"
+						+"{{ #crBasicInfoSec.langFilterControls.mandatory }}"
+							+"<span class='crMandatoryInput'>*</span>"
+						+"{{ /crBasicInfoSec.langFilterControls.mandatory }}"
+						+"{{ crBasicInfoSec.langFilterControls.langFilterText }}"
+					+"</label>"
+					//---------En Radio Starts
+					+"<input onchange='langFilterCRBasicInfoEH(event, 1)' id='lang-filter-en' type='radio'"
+						+"{{ #crBasicInfoSec.langFilterControls.langFilterEnRadio.checked }}"
+							+"checked"
+						+"{{ /crBasicInfoSec.langFilterControls.langFilterEnRadio.checked }}"
+					+"/>"
+					+"<label for='lang-filter-en' class='label'>{{ crBasicInfoSec.langFilterControls.langFilterEnRadio.label }}</label>"
+					//---------En Radio Ends
+					//---------Fr Radio Starts
+					+"<input onchange='langFilterCRBasicInfoEH(event, 2)' id='lang-filter-fr' type='radio'"
+						+"{{ #crBasicInfoSec.langFilterControls.langFilterFrRadio.checked }}"
+							+"checked"
+						+"{{ /crBasicInfoSec.langFilterControls.langFilterFrRadio.checked }}"
+					+"/>"
+					+"<label for='lang-filter-fr' class='label'>{{ crBasicInfoSec.langFilterControls.langFilterFrRadio.label }}</label>"
+					//---------Fr Radio Ends
+					//---------Select Both Radio Starts
+					+"<input onchange='langFilterCRBasicInfoEH(event, 0)' id='lang-filter-both' type='radio'"
+					+"{{ #crBasicInfoSec.langFilterControls.bothLangFilterFrRadio.checked }}"
+						+"checked"
+					+"{{ /crBasicInfoSec.langFilterControls.bothLangFilterFrRadio.checked }}"
+					+"/>"
+					+"<label for='lang-filter-both' class='label'>{{ crBasicInfoSec.langFilterControls.bothLangFilterFrRadio.label }}</label>"
+					//---------Select Both Radio Ends
+				+"</div>"
+				//---------Language Filter Controls DIV Ends
+				
+				//---------Recipe Name Controls En DIV Starts									
+					+"{{ #showENLocaleFields }}"
+						+"<div id='cr-names-en' class='cr-names-en' name='cr-names-en'>"
+							+"<div class='data-Leftsection'>"
+								//---------Custom Recipe Name Input Starts
+								+"{{ #crBasicInfoSec.enInfo.crNameInput.mandatory }}"
+									+"<span class='crMandatoryInput'>*</span>"
+								+"{{ /crBasicInfoSec.enInfo.crNameInput.mandatory }}"
+								+"<label for='cr-name-en'>{{ crBasicInfoSec.enInfo.crNameInput.label }}</label>"
+								+"<input id='cr-name-en' name='cr-name-en' type='text' value='{{ crBasicInfoSec.enInfo.crNameInput.value }}' "
+								+" onchange='takeCRBasicInfoSnapShotEH(event)' />"
+								//---------Custom Recipe Name Input Ends
+							+"</div>"
+							+"<div class='data-Leftsection'>"
+								//---------Custom Recipe Friendly Name Input Starts
+								+"{{ #crBasicInfoSec.enInfo.crFriendlyNameInput.mandatory }}"
+									+"<span class='crMandatoryInput'>*</span>"
+								+"{{ /crBasicInfoSec.enInfo.crFriendlyNameInput.mandatory }}"
+								+"<label for='cr-friendly-name-en'>{{ crBasicInfoSec.enInfo.crFriendlyNameInput.label }}</label>"
+								+"<input id='cr-friendly-name-en' name='cr-friendly-name-en' type='text'"
+									+" onchange='takeCRBasicInfoSnapShotEH(event)' "
+									+"value='{{ crBasicInfoSec.enInfo.crFriendlyNameInput.value }}'"
+								+"/>"
+								//---------Custom Recipe Friendly Name Input Ends
+							+"</div>"
+						+"</div>"
+					+"{{ /showENLocaleFields }}"
+				//---------Recipe Name Controls En DIV Ends
+				
+				//---------Recipe Name Controls Fr DIV Starts				
+					+"{{ #showFRLocaleFields }}"
+						+"<div id='cr-names-fr' class='cr-names-fr' name='cr-names-fr'>"
+							+"<div class='data-Leftsection'>"
+								//---------Custom Recipe Fr Name Input Starts
+								+"{{ #crBasicInfoSec.frInfo.crNameInput.mandatory }}"
+									+"<span class='crMandatoryInput'>*</span>"
+								+"{{ /crBasicInfoSec.frInfo.crNameInput.mandatory }}"
+								+"<label for='cr-name-fr'>{{ crBasicInfoSec.frInfo.crNameInput.label }}</label>"
+								+"<input id='cr-name-fr' name='cr-name-fr' type='text' value='{{ crBasicInfoSec.frInfo.crNameInput.value }}'"
+									+" onchange='takeCRBasicInfoSnapShotEH(event)' "
+								+"/>"
+								//---------Custom Recipe Fr Name Input Ends
+							+"</div>"
+							+"<div class='data-Leftsection'>"
+								//---------Custom Recipe Friendly Name Input Starts
+								+"{{ #crBasicInfoSec.frInfo.crFriendlyNameInput.mandatory }}"
+									+"<span class='crMandatoryInput'>*</span>"
+								+"{{ /crBasicInfoSec.frInfo.crFriendlyNameInput.mandatory }}"
+								+"<label for='cr-friendly-name-fr'>{{ crBasicInfoSec.frInfo.crFriendlyNameInput.label }}</label>"
+								+"<input id='cr-friendly-name-fr' name='cr-friendly-name-fr' type='text'"
+									+" onchange='takeCRBasicInfoSnapShotEH(event)' "
+									+"value='{{ crBasicInfoSec.frInfo.crFriendlyNameInput.value }}'"
+								+"/>"
+								//---------Custom Recipe Friendly Name Input Ends
+							+"</div>"
+						+"</div>"				
+					+"{{ /showFRLocaleFields }}"
+				//---------Recipe Name Controls Fr DIV Ends
+		  +"</fieldset>";		  
+}
+
+function getCustomRecipeUsageInfoTemplate(){
+	return "<div id='cr-usage-info-left-section' class='cr-info-left-section'>"
+				+"<div class='data-Leftsection'>"
+					//---------Recipe Serving Input Starts
+					+"{{ #crUsageInfoSec.recServingInput.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /crUsageInfoSec.recServingInput.mandatory }}"
+					+"<label for='cr-serving'>{{ crUsageInfoSec.recServingInput.label }}</label>"
+					+"<input onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-serving' name='cr-serving' type='text'"
+						+" value='{{ crUsageInfoSec.recServingInput.value }}' "
+					+"/>"
+					//---------Recipe Serving Input Ends
+				+"</div>"
+				+"<div class='data-Leftsection'>"
+					//---------Portion Size Metric Input Starts
+					+"{{ #crUsageInfoSec.portionSizeMetInput.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /crUsageInfoSec.portionSizeMetInput.mandatory }}"
+					+"<label for='cr-portion-size-m'>{{ crUsageInfoSec.portionSizeMetInput.label }}</label>"
+					+"<input onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-portion-size-m' name='cr-portion-size-m' type='text'"
+						+" value='{{ crUsageInfoSec.portionSizeMetInput.value }}' "
+					+"/>"
+					+"<select id='cr-portion-size-m-combo' class='smallSelect' name='cr-portion-size-m-combo'>"
+						+"{{ #crUsageInfoSec.portionSizeMetInput.portionUnitMetCombo.unitList }}"
+							+"<option>"
+								+"{{ name }}"
+							+"</option>"
+						+"{{ /crUsageInfoSec.portionSizeMetInput.portionUnitMetCombo.unitList }}"
+					+"</select>"
+					//---------Portion Size Metric Input Ends
+				+"</div>"
+				+"<div class='data-Leftsection'>"
+					//---------Portion Size Imperial Input Starts
+					+"{{ #crUsageInfoSec.portionSizeImpInput.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /crUsageInfoSec.portionSizeImpInput.mandatory }}"
+					+"<label for='cr-portion-size-m'>{{ crUsageInfoSec.portionSizeImpInput.label }}</label>"
+					+"<input onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-portion-size-i' name='cr-portion-size-i' type='text'"
+						+" value='{{ crUsageInfoSec.portionSizeImpInput.value }}' "
+					+"/>"
+					+"<select id='cr-portion-size-i-combo' class='smallSelect' name='cr-portion-size-i-combo'>"
+						+"{{ #crUsageInfoSec.portionSizeImpInput.portionUnitImpCombo.unitList }}"
+							+"<option>{{ name }}</option>"
+						+"{{ /crUsageInfoSec.portionSizeImpInput.portionUnitImpCombo.unitList }}"
+					+"</select>"
+					//---------Portion Size Imperial Input Ends
+				+"</div>"
+				+"<div class='data-Leftsection'>"
+					//---------Serving Utensil Combo Input Starts
+					+"{{ #crUsageInfoSec.servingUtensilCombo.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /crUsageInfoSec.servingUtensilCombo.mandatory }}"
+					+"<label for='cr-serving-utensil'>{{ crUsageInfoSec.servingUtensilCombo.label }}</label>"
+					+"<select id='cr-serving-utensil' name='cr-serving-utensil'>"
+						+"{{ #crUsageInfoSec.servingUtensilCombo.utensilList }}"
+							+"<option>{{ name }}</option>"
+						+"{{ /crUsageInfoSec.servingUtensilCombo.utensilList }}"
+					+"</select>"
+					//---------Serving Utensil Combo Input Ends
+				+"</div>"
+				+"<div class='data-Leftsection'>"
+					//---------Categories Combo Input Starts
+					+"{{ #crUsageInfoSec.recipeCategoriesCombo.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /crUsageInfoSec.recipeCategoriesCombo.mandatory }}"
+					+"<label for='cr-categories-combo'>{{ crUsageInfoSec.recipeCategoriesCombo.label }}</label>"
+					+"<select id='cr-categories-combo' name='cr-categories-combo'>"				
+						+"{{ #crUsageInfoSec.recipeCategoriesCombo.categoryList }}"
+							+"<option>{{ name }}</option>"
+						+"{{ /crUsageInfoSec.recipeCategoriesCombo.categoryList }}"
+					+"</select>"
+					//---------Categories Combo Input Ends
+				+"</div>"
+		  +"</div>"
+		  +"<div id='cr-usage-info-right-section' class='cr-info-right-section'>"
+				+"<div class='data-Leftsection'>"	
+					//---------Estimated cost Input Starts
+					+"{{ #crUsageInfoSec.estimatedCostInput.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /crUsageInfoSec.estimatedCostInput.mandatory }}"
+					+"<label for='cr-est-cost'>{{ crUsageInfoSec.estimatedCostInput.label }}</label>"
+					+"<input onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-est-cost' name='cr-est-cost' type='text'"
+						+" value='{{ crUsageInfoSec.estimatedCostInput.value }}' "
+					+"/>"
+					//---------Estimated cost Input Ends
+				+"</div>"
+				+"<div class='data-Leftsection'>"
+					//---------Therapeutic Dimensions Combo Input Starts
+					+"{{ #crUsageInfoSec.therapeuticDimensionMultiSelect.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /crUsageInfoSec.therapeuticDimensionMultiSelect.mandatory }}"
+					+"<label for='cr-therapeuctics-combo'>{{ crUsageInfoSec.therapeuticDimensionMultiSelect.label }}</label>"
+					+"<select id='cr-therapeuctics-combo' name='cr-therapeuctics-combo'  multiple>"
+						+"{{ #crUsageInfoSec.therapeuticDimensionMultiSelect.therapeuticsList }}"
+							+"<option>{{ name }}</option>"
+						+"{{ /crUsageInfoSec.therapeuticDimensionMultiSelect.therapeuticsList }}"
+					+"</select>"
+					//---------Therapeutic Dimensions Combo Input Ends
+				+"</div>"
+				+"<div class='data-Leftsection'>"
+					//---------Recipe Status Combo Starts
+					+"{{ #crUsageInfoSec.crStatusCombo.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /crUsageInfoSec.crStatusCombo.mandatory }}"
+					+"<label for='cr-status-combo'>{{ crUsageInfoSec.crStatusCombo.label }}</label>"
+					+"<select id='cr-status-combo' name='cr-status-combo'>"
+						+"{{ #crUsageInfoSec.crStatusCombo.statusList }}"
+							+"<option>{{ name }}</option>"
+						+"{{ /crUsageInfoSec.crStatusCombo.statusList }}"
+					+"</select>"				
+					//---------Recipe Status Combo Ends
+				+"</div>"
+		  +"</div>";
+}
+
+function getNutritionalsInfoTemplate(){
+	return   "<div class='nutritional-info-header'>{{ nutritionalInfoSec.headerLabel }}</div>"
+			+"<div class='nutritionals-container'>"
+				//---------Calories Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.calories.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.calories.mandatory }}"
+					+"<label for='cr-nutr-calories'>{{ nutritionalInfoSec.calories.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-calories' name='cr-nutr-calories'>{{ nutritionalInfoSec.calories.input.value }}</input>"
+					+"<label for='cr-nutr-calories'>{{ nutritionalInfoSec.calories.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-cal-acc' name='cr-nutr-cal-acc' "
+						+"{{ #nutritionalInfoSec.calories.accuracy.checked }} checked {{ /nutritionalInfoSec.calories.accuracy.checked }}"
+					+"/>"
+					+"<label for='cr-nutr-cal-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Calories Ends
+				//---------Protein Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.protein.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.protein.mandatory }}"
+					+"<label for='cr-nutr-prot'>{{ nutritionalInfoSec.protein.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-prot' name='cr-nutr-prot'>{{ nutritionalInfoSec.protein.input.value }}</input>"
+					+"<label for='cr-nutr-prot'>{{ nutritionalInfoSec.protein.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-prot-acc' name='cr-nutr-prot-acc' "
+						+"{{ #nutritionalInfoSec.protein.accuracy.checked }} checked {{ /nutritionalInfoSec.protein.accuracy.checked }}"
+					+"/>"					
+					+"<label for='cr-nutr-prot-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Protein Ends
+				//---------Fat Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.fat.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.fat.mandatory }}"
+					+"<label for='cr-nutr-fat'>{{ nutritionalInfoSec.fat.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-fat' name='cr-nutr-fat'>{{ nutritionalInfoSec.fat.input.value }}</input>"
+					+"<label for='cr-nutr-fat'>{{ nutritionalInfoSec.fat.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-fat-acc' name='cr-nutr-fat-acc' "
+						+"{{ #nutritionalInfoSec.fat.accuracy.checked }} checked {{ /nutritionalInfoSec.fat.accuracy.checked }}"
+					+"/>"
+					+"<label for='cr-nutr-fat-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Fat Ends
+		  +"</div>"
+		  
+		  +"<div class='nutritionals-container'>"
+				//---------Cholesterol Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.cholestrol.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.cholestrol.mandatory }}"
+					+"<label for='cr-nutr-cholestrol'>{{ nutritionalInfoSec.cholestrol.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-cholestrol' name='cr-nutr-cholestrol'>{{ nutritionalInfoSec.cholestrol.input.value }}</input>"
+					+"<label for='cr-nutr-cholestrol'>{{ nutritionalInfoSec.cholestrol.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-chol-acc' name='cr-nutr-chol-acc' "
+						+"{{ #nutritionalInfoSec.cholestrol.accuracy.checked }} checked {{ /nutritionalInfoSec.cholestrol.accuracy.checked }}"
+					+"/>"
+					+"<label for='cr-nutr-chol-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Cholesterol Ends
+				//---------Carbohydrate Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.carbohydrate.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.carbohydrate.mandatory }}"
+					+"<label for='cr-nutr-carbo'>{{ nutritionalInfoSec.carbohydrate.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-carbo' name='cr-nutr-carbo'>{{ nutritionalInfoSec.carbohydrate.input.value }}</input>"
+					+"<label for='cr-nutr-carbo'>{{ nutritionalInfoSec.carbohydrate.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-carbo-acc' name='cr-nutr-carbo-acc' "
+						+"{{ #nutritionalInfoSec.carbohydrate.accuracy.checked }} checked {{ /nutritionalInfoSec.carbohydrate.accuracy.checked }}"
+					+"/>"					
+					+"<label for='cr-nutr-carbo-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Carbohydrate Ends
+				//---------Dietary Fibre Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.dietaryFibre.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.dietaryFibre.mandatory }}"
+					+"<label for='cr-nutr-d-fibre'>{{ nutritionalInfoSec.dietaryFibre.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-d-fibre' name='cr-nutr-d-fibre'>{{ nutritionalInfoSec.dietaryFibre.input.value }}</input>"
+					+"<label for='cr-nutr-d-fibre'>{{ nutritionalInfoSec.dietaryFibre.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-d-fibre-acc' name='cr-nutr-d-fibre-acc' "
+						+"{{ #nutritionalInfoSec.dietaryFibre.accuracy.checked }} checked {{ /nutritionalInfoSec.dietaryFibre.accuracy.checked }}"
+					+"/>"
+					+"<label for='cr-nutr-d-fibre-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Dietary Fibre Ends
+		  +"</div>"
+		  
+		  +"<div class='nutritionals-container'>"
+				//---------Calcium Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #.nutritionalInfoSec.calcium.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /.nutritionalInfoSec.calcium.mandatory }}"
+					+"<label for='cr-nutr-calc'>{{ nutritionalInfoSec.calcium.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-calc' name='cr-nutr-calc'>{{ .nutritionalInfoSec.calcium.input.value }}</input>"
+					+"<label for='cr-nutr-calc'>{{ nutritionalInfoSec.calcium.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-cal-acc' name='cr-nutr-cal-acc' "
+						+"{{ #nutritionalInfoSec.calcium.accuracy.checked }} checked {{ /nutritionalInfoSec.calcium.accuracy.checked }}"
+					+"/>"
+					+"<label for='cr-nutr-cal-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Calcium Ends
+				//---------Iron Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.iron.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.iron.mandatory }}"
+					+"<label for='cr-nutr-iron'>{{ nutritionalInfoSec.iron.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-iron' name='cr-nutr-iron'>{{ nutritionalInfoSec.iron.input.value }}</input>"
+					+"<label for='cr-nutr-iron'>{{ nutritionalInfoSec.iron.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-iron-acc' name='cr-nutr-iron-acc' "
+						+"{{ #nutritionalInfoSec.iron.accuracy.checked }} checked {{ /nutritionalInfoSec.iron.accuracy.checked }}"
+					+"/>"					
+					+"<label for='cr-nutr-iron-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Iron Ends
+				//---------Vitamin A RAE Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.vitaminARAE.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.vitaminARAE.mandatory }}"
+					+"<label for='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARAE.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-v-a-rae' name='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARAE.input.value }}</input>"
+					+"<label for='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARAE.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-v-a-rae-acc' name='cr-nutr-v-a-rae-acc' "
+						+"{{ #nutritionalInfoSec.vitaminARAE.accuracy.checked }} checked {{ /nutritionalInfoSec.vitaminARAE.accuracy.checked }}"
+					+"/>"
+					+"<label for='cr-nutr-v-a-rae-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Vitamin A RAE Ends
+		  +"</div>"
+		  
+		 +"<div class='nutritionals-container'>"
+				//---------Saturated Fat Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.saturatedFat.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.saturatedFat.mandatory }}"
+					+"<label for='cr-nutr-s-fat'>{{ nutritionalInfoSec.saturatedFat.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-s-fat' name='cr-nutr-s-fat'>{{ nutritionalInfoSec.saturatedFat.input.value }}</input>"
+					+"<label for='cr-nutr-s-fat'>{{ nutritionalInfoSec.saturatedFat.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-s-fat-acc' name='cr-nutr-s-fat-acc' "
+						+"{{ #nutritionalInfoSec.saturatedFat.accuracy.checked }} checked {{ /nutritionalInfoSec.saturatedFat.accuracy.checked }}"
+					+"/>"
+					+"<label for='cr-nutr-s-fat-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Saturated Fat Ends
+				//---------Fatty Acids Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.fattyAcids.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.fattyAcids.mandatory }}"
+					+"<label for='cr-nutr-f-acids'>{{ nutritionalInfoSec.fattyAcids.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-f-acids' name='cr-nutr-f-acids'>{{ nutritionalInfoSec.fattyAcids.input.value }}</input>"
+					+"<label for='cr-nutr-f-acids'>{{ nutritionalInfoSec.fattyAcids.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-f-acids-acc' name='cr-nutr-f-acids-acc' "
+						+"{{ #nutritionalInfoSec.fattyAcids.accuracy.checked }} checked {{ /nutritionalInfoSec.fattyAcids.accuracy.checked }}"
+					+"/>"					
+					+"<label for='cr-nutr-f-acids-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Fatty Acids Ends
+				//---------Vitamin C Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.vitaminC.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.vitaminC.mandatory }}"
+					+"<label for='cr-nutr-vitamin-c'>{{ nutritionalInfoSec.vitaminC.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-vitamin-c' name='cr-nutr-vitamin-c'>{{ nutritionalInfoSec.vitaminC.input.value }}</input>"
+					+"<label for='cr-nutr-vitamin-c'>{{ nutritionalInfoSec.vitaminC.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-vitamin-c-acc' name='cr-nutr-vitamin-c-acc' "
+						+"{{ #nutritionalInfoSec.vitaminC.accuracy.checked }} checked {{ /nutritionalInfoSec.vitaminC.accuracy.checked }}"
+					+"/>"
+					+"<label for='cr-nutr-vitamin-c-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Vitamin C Ends
+		  +"</div>"
+		  
+		  +"<div class='nutritionals-container'>"
+				//---------Sugars Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.sugars.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.sugars.mandatory }}"
+					+"<label for='cr-nutr-sugars'>{{ nutritionalInfoSec.sugars.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-sugars' name='cr-nutr-sugars'>{{ nutritionalInfoSec.sugars.input.value }}</input>"
+					+"<label for='cr-nutr-sugars'>{{ nutritionalInfoSec.sugars.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-sugars-acc' name='cr-nutr-sugars-acc' "
+						+"{{ #nutritionalInfoSec.sugars.accuracy.checked }} checked {{ /nutritionalInfoSec.sugars.accuracy.checked }}"
+					+"/>"
+					+"<label for='cr-nutr-sugars-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Sugars Ends
+				//---------Sodium Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.sodium.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.sodium.mandatory }}"
+					+"<label for='cr-nutr-sodium'>{{ nutritionalInfoSec.sodium.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-sodium' name='cr-nutr-sodium'>{{ nutritionalInfoSec.sodium.input.value }}</input>"
+					+"<label for='cr-nutr-sodium'>{{ nutritionalInfoSec.sodium.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-sodium-acc' name='cr-nutr-sodium-acc' "
+						+"{{ #nutritionalInfoSec.sodium.accuracy.checked }} checked {{ /nutritionalInfoSec.sodium.accuracy.checked }}"
+					+"/>"					
+					+"<label for='cr-nutr-sodium-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Sodium Ends
+				//---------Vitamin A RE Starts
+				+"<span class='nutriotional-item'>"
+					+"{{ #nutritionalInfoSec.vitaminARE.mandatory }}"
+						+"<span class='crMandatoryInput'>*</span>"
+					+"{{ /nutritionalInfoSec.vitaminARE.mandatory }}"
+					+"<label for='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARE.input.label }}</label>"
+					+"<input type='text' id='cr-nutr-v-a-rae' name='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARE.input.value }}</input>"
+					+"<label for='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARE.input.unitLabel }}</label>"
+					+"<input type='checkbox' id='cr-nutr-v-a-rae-acc' name='cr-nutr-v-a-rae-acc' "
+						+"{{ #nutritionalInfoSec.vitaminARE.accuracy.checked }} checked {{ /nutritionalInfoSec.vitaminARE.accuracy.checked }}"
+					+"/>"
+					+"<label for='cr-nutr-v-a-rae-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
+				+"</span>"
+				//---------Vitamin A RE Ends
+		  +"</div>";
+}
+
+function getCRAdminNotesTemplate(){
+	return "{{ #showENLocaleFields }}"
+			  +"<div id='cr-en-a-notes-container'>"
+					+"<div id='cr-en-a-notes-header'>"
+						+"{{ #crAdminNotesSec.adminNotesEnTextArea.mandatory }}"
+							+"<span class='crMandatoryInput'>*</span>"
+					    +"{{ /crAdminNotesSec.adminNotesEnTextArea.mandatory }}"
+						+"<span>{{ crAdminNotesSec.adminNotesEnTextArea.label }}</span>"
+					+"</div>"
+					+"<textarea id='cr-en-a-notes-content'>{{ crAdminNotesSec.adminNotesEnTextArea.value }}</textarea>"
+			  +"</div>"
+		  +"{{ /showENLocaleFields }}"
+		  +"{{ #showFRLocaleFields }}"
+			   +"<div id='cr-fr-a-notes-container'>"
+					+"<div id='cr-fr-a-notes-header'>"
+						+"{{ #crAdminNotesSec.adminNotesFrTextArea.mandatory }}"
+							+"<span class='crMandatoryInput'>*</span>"
+					    +"{{ /crAdminNotesSec.adminNotesFrTextArea.mandatory }}"
+						+"<span>{{ crAdminNotesSec.adminNotesFrTextArea.label }}</span>"
+					+"</div>"
+					+"<textarea id='cr-fr-a-notes-content'>{{ crAdminNotesSec.adminNotesFrTextArea.value }}</textarea>"
+			  +"</div>"
+		 +"{{ /showFRLocaleFields }}";
+}
+
+function getCRControlsTemplate(){
+	return "<button id='save-cr' name='save-cr'>{{ crControlsSec.saveCRButton.label }}</button>"
+		  +"<button id='cancel-cr' name='cancel-cr'>{{ crControlsSec.cancelCRButton.label }}</button>";
+}
+//---------Template Function Definitions Ends
+
+//---------Event Handler Function Definitions Starts
+function expandOrCollapseEH(id){
+	if( $("#step-" + id + "-content").css("display") == "block" ){
+		$("#step-" + id + "-content").css("display", "none");
+	}else{
+		$("#step-" + id + "-content").css("display", "block");
+	}
+}
+
+function langFilterCRBasicInfoEH(event, languageId){
+
+	if(languageId == 1){//Means English
+		data.showAllLocaleFields = false;
+		data.showFRLocaleFields = false;
+		data.showENLocaleFields = true;
+		//---------Check Mark Respected Radio Controls
+		data.crBasicInfoSec.langFilterControls.langFilterFrRadio.checked = false;
+		data.crBasicInfoSec.langFilterControls.bothLangFilterFrRadio.checked = false;
+		data.crBasicInfoSec.langFilterControls.langFilterEnRadio.checked = true;		
+	}
+	else if(languageId == 2){//Means French
+		data.showAllLocaleFields = false;
+		data.showENLocaleFields = false;
+		data.showFRLocaleFields = true;
+		//---------Check Mark Respected Radio Controls
+		data.crBasicInfoSec.langFilterControls.langFilterEnRadio.checked = false;
+		data.crBasicInfoSec.langFilterControls.bothLangFilterFrRadio.checked = false;
+		data.crBasicInfoSec.langFilterControls.langFilterFrRadio.checked = true;		
+	}
+	else if(languageId == 0){//Means Show all Locale
+		data.showFRLocaleFields = true;
+		data.showENLocaleFields = true;
+		data.showAllLocaleFields = true;
+		//---------Check Mark Respected Radio Controls
+		data.crBasicInfoSec.langFilterControls.langFilterEnRadio.checked = false;
+		data.crBasicInfoSec.langFilterControls.langFilterFrRadio.checked = false;
+		data.crBasicInfoSec.langFilterControls.bothLangFilterFrRadio.checked = true;		
+	}
+	//---------Regenerate The Whole Screen
+	main();
+}
+
+function takeCRBasicInfoSnapShotEH(event){
+	data.crBasicInfoSec.enInfo.crNameInput.value = $("#cr-name-en").val();
+	data.crBasicInfoSec.enInfo.crFriendlyNameInput.value = $("#cr-friendly-name-en").val();	
+	data.crBasicInfoSec.frInfo.crNameInput.value = $("#cr-name-fr").val();
+	data.crBasicInfoSec.frInfo.crFriendlyNameInput.value = $("#cr-name-fr").val();
+}
+
+function takeCRUsageInfoSnapShotEH(event){
+	data.crUsageInfoSec.recServingInput.value = $("#cr-serving").val();
+	data.crUsageInfoSec.portionSizeMetInput.value = $("#cr-portion-size-m").val();
+	data.crUsageInfoSec.portionSizeImpInput.value = $("#cr-portion-size-i").val();
+	data.crUsageInfoSec.servingUtensilCombo.value = $("#cr-serving-utensil").val();
+	data.crUsageInfoSec.recipeCategoriesCombo.value = $("#cr-categories-combo").val();
+	data.crUsageInfoSec.estimatedCostInput.value = $("#cr-est-cost").val();
+	data.crUsageInfoSec.therapeuticDimensionMultiSelect.value = $("#cr-therapeuctics-combo").val();
+	data.crUsageInfoSec.crStatusCombo.value = $("#cr-status-combo").val();
+}
+//---------Event Handler Function Definitions Ends
+		</script>
+	</body>
+</html>
