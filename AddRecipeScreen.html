@@ -293,28 +293,6 @@
 																				"label"		: "Amount(I)",//Locale Based
 																				"mandatory"	: false
 																			  },
-													"amountUnitsImperialCombo"		: [//From Data Base
-																						{ 
-																							"name" : "each"
-																						},
-																						{ 
-																						  "name" : "Weach",
-																						  "selected" : {
-																											"s1-i1" : true,
-																											"s2-i1" : true
-																									   }
-																						}
-																					  ],
-													"amountUnitMetricCombo"			: [//From Data Base
-																						{ "name" : "each" },
-																						{
-																							"name" : "Weach",
-																							"selected" : {
-																											"s1-i1" : true,
-																											"s2-i1" : true
-																										 }
-																						}
-																					  ],
 													"moveUpButton"			: {
 																				"image"		: "",//Image Path
 																				"title"		: "Move Up"//Locale Based
@@ -346,16 +324,42 @@
 																		{
 																			"index"					: 1,
 																			"ingrNameInputEN" 		: {
-																										"value" : ""
+																										"value" : null
 																									  },
 																			"ingrNameInputFR" 		: {
-																										"value" : ""
+																										"value" : null
 																									  },
 																		    "amountMetricInput"		: {
-																									    "value" : ""
+																				"value" : null,
+																				"amountUnitMetricCombo" : {
+																										   "unitsList" :
+																												[
+																													{ 
+																														"name" : "each" 
+																													},
+																													{
+																													 "name" : "Weach",
+																													 "selected" : true
+																													}
+																												],
+																											"value"		: null
+																										  }
 																									  },
 																			"amountImperialInput"	: {
-																										"value"	: ""
+																				"value"			       : null,
+																				"amountUnitsImperialCombo": {
+																										   "unitsList" : 
+																												[
+																													{
+																														"name" : "each"
+																													},
+																													{
+																													 "name" :"Weach",
+																													 "selected" : true
+																													}
+																												],
+																										   "value"     : null
+																										    }
 																									  },
 																		    "moveUpButton"			: {},
 																			"moveDownButton"		: {},
@@ -364,17 +368,43 @@
 																		{
 																			"index"					: 2,
 																			"ingrNameInputEN" 		: {
-																										"value" : ""
+																										"value" : null
 																									  },
 																			"ingrNameInputFR" 		: {
-																										"value" : ""
+																										"value" : null
 																									  },
-																		    "amountMetricInput"		: {
-																									    "value" : ""
+																																																					"amountMetricInput"		: {
+																				"value" : null,
+																				"amountUnitMetricCombo" : {
+																										   "unitsList" : 
+																												[
+																													{ 
+																													"name" : "each",
+																													"selected" :true
+																													},
+																													{
+																														"name" : "Weach"
+																													}
+																												],
+																											"value"		: null
+																										  }
 																									  },
-																			"amountImperialInput"	: {
-																										"value"	: ""
-																									  },
+																			"amountImperialInput"	: 
+																			{
+																			 "value"			       : null,
+																		     "amountUnitsImperialCombo": {
+																										   "unitsList" : 
+																												[
+																													{
+																														"name" : "each"
+																													},
+																													{
+																														"name" : "Weach"
+																													}
+																												],
+																										   "value"     : null
+																										  }
+																		    },
 																		    "moveUpButton"			: {},
 																			"moveDownButton"		: {},
 																			"deleteButton"			: {},
@@ -395,17 +425,42 @@
 																		{
 																			"index"					: 1,
 																			"ingrNameInputEN" 		: {
-																										"value" : ""
+																										"value" : null
 																									  },
 																			"ingrNameInputFR" 		: {
-																										"value" : ""
+																										"value" : null
 																									  },
-																		    "amountMetricInput"		: {
-																									    "value" : ""
+																																																				    "amountMetricInput"		: {
+																				"value" : null,
+																				"amountUnitMetricCombo" : {
+																										   "unitsList" : 
+																												[
+																													{ 
+																														"name" : "each" 
+																													},
+																													{
+																														"name" : "Weach"
+																													}
+																												],
+																											"value"		: null
+																										  }
 																									  },
-																			"amountImperialInput"	: {
-																										"value"	: ""
-																									  },
+																			"amountImperialInput"	: 
+																			{
+																			 "value"			       : null,
+																		     "amountUnitsImperialCombo": {
+																										   "unitsList" : 
+																												[
+																													{
+																														"name" : "each"
+																													},
+																													{
+																														"name" : "Weach"
+																													}
+																												],
+																										   "value"     : null
+																										  }
+																		    },
 																		    "moveUpButton"			: {},
 																			"moveDownButton"		: {},
 																			"deleteButton"			: {},
@@ -672,7 +727,7 @@ function generateStepIngredients(step){
 	//---------Step Ingredients Generation Starts
 	renderTemplate(
 				"#step-" + step.index + "-ingredients",
-				cr_step_ingredients_tepmplate, getCRStepIngredientsTemplate(step),
+				cr_step_ingredients_tepmplate, getCRStepIngredientsTemplate(),
 				{
 				  "showAllLocaleFields" : data.showAllLocaleFields,
 				  "showENLocaleFields"  : data.showENLocaleFields,	
@@ -737,92 +792,89 @@ function getCRHeaderTemplate(){
 		   //---------Delete Step Button Ends		   			
 }
 
-function getCRStepIngredientsTemplate(step){
-	var fragment =  "<div class=step-ingredients-header>"
+function getCRStepIngredientsTemplate(){
+	return "<div class=step-ingredients-header>"
 				+"{{ ui.ingeredientsLabel }}"
 				+"<button>{{ ui.addIngredientsLabel }}</button>"
 		  +"</div>"
-		  +"<div class='step-ingredients-list'>";
-		  
-		$.each(step.ingredients, function(index, item){
-			fragment += "<div name='ingredient-item' class='ingredient-item'>"
-							//---------Ingredient Name Input En Starts
-							+"{{ #showENLocaleFields }}"								
-								+"<label for='ingredient-name-input-en'>"
-									+"{{ #ui.ingrNameInputEN.mandatory }}"
+		  +"<div class='step-ingredients-list'>"
+			+"{{ #step.ingredients }}"
+				+"<div name='ingredient-item' class='ingredient-item'>"
+								//---------Ingredient Name Input En Starts
+								+"{{ #showENLocaleFields }}"								
+									+"<label for='ingredient-name-input-en'>"
+										+"{{ #ui.ingrNameInputEN.mandatory }}"
+											+"<span class='crMandatoryInput'>*</span>"
+										+"{{ /ui.ingrNameInputEN.mandatory }}"
+										+"{{ ui.ingrNameInputEN.label }}"
+									+"</label>"
+									+"<input name='ingredient-name-input-en' value='{{ step.ingrNameInputEN.value }}' />"
+								+"{{ /showENLocaleFields }}"
+								//---------Ingredient Name Input En Ends
+								//---------Ingredient Name Input Fr Starts
+								+"{{ #showFRLocaleFields }}"								
+									+"<label for='ingredient-name-input-fr'>"
+									+"{{ #ui.ingrNameInputFR.mandatory }}"
 										+"<span class='crMandatoryInput'>*</span>"
-									+"{{ /ui.ingrNameInputEN.mandatory }}"
-									+"{{ ui.ingrNameInputEN.label }}"
+									+"{{ /ui.ingrNameInputFR.mandatory }}"
+									+"{{ ui.ingrNameInputFR.label }}"
+									+"</label>"
+									+"<input name='ingredient-name-input-fr' value='{{ step.ingrNameInputFR.value }}' />"
+								+"{{ /showFRLocaleFields }}"
+								//---------Ingredient Name Input Fr Ends							
+								//---------Ingredient Amount Input Imperial Starts							
+								+"<label for='ingredient-amount-input-imp'>"
+									+"{{ #ui.amountImperialInput.mandatory }}"
+										+"<span class='crMandatoryInput'>*</span>"
+									+"{{ /ui.amountImperialInput.mandatory }}"
+									+"{{ ui.amountImperialInput.label }}"
 								+"</label>"
-								+"<input name='ingredient-name-input-en' value='"+item.ingrNameInputEN.value+"' />"
-							+"{{ /showENLocaleFields }}"
-							//---------Ingredient Name Input En Ends
-							//---------Ingredient Name Input Fr Starts
-							+"{{ #showFRLocaleFields }}"								
-								+"<label for='ingredient-name-input-fr'>"
-								+"{{ #ui.ingrNameInputFR.mandatory }}"
-									+"<span class='crMandatoryInput'>*</span>"
-								+"{{ /ui.ingrNameInputFR.mandatory }}"
-								+"{{ ui.ingrNameInputFR.label }}"
+								+"<input name='ingredient-name-input-imp' class='step-Input' value='{{ step.amountImperialInput.value }}' />"
+								+"<select name='ingr-amount-units-combo-imp' class='step-Input'>"
+									+"{{ #amountImperialInput.amountUnitsImperialCombo.unitsList }}"
+										+"<option {{ #selected }} selected {{ /selected }} >"
+											+"{{ name }}"
+										+"</option>"
+									+"{{ /amountImperialInput.amountUnitsImperialCombo.unitsList }}"
+								+"</select>"
+								//---------Ingredient Amount Input Imperial Ends
+								//---------Ingredient Amount Input Metric Starts							
+								+"<label for='ingredient-amount-input-met'>"
+									+"{{ #ui.amountMetricInput.mandatory }}"
+										+"<span class='crMandatoryInput'>*</span>"
+									+"{{ /ui.amountMetricInput.mandatory }}"
+									+"{{ ui.amountMetricInput.label }}"
 								+"</label>"
-								+"<input name='ingredient-name-input-fr' value='"+item.ingrNameInputFR.value+"' />"
-							+"{{ /showFRLocaleFields }}"
-							//---------Ingredient Name Input Fr Ends							
-							//---------Ingredient Amount Input Metric Starts							
-							+"<label for='ingredient-amount-input-met'>"
-								+"{{ #ui.amountMetricInput.mandatory }}"
-									+"<span class='crMandatoryInput'>*</span>"
-								+"{{ /ui.amountMetricInput.mandatory }}"
-								+"{{ ui.amountMetricInput.label }}"
-							+"</label>"
-							+"<input name='ingredient-amount-input-met' class='step-Input' value='"+item.amountMetricInput.value+"' />"
-							+"<select name='ingr-amount-units-combo-met' class='step-Input'>"
-								+"{{ #ui.amountUnitMetricCombo }}"
-									+"<option {{ #selected.s"+step.index+"-i"+item.index+" }} selected {{ /selected.s"+step.index+"-i"+item.index+" }} >"
-										+"{{ name }}"
-									+"</option>"
-								+"{{ /ui.amountUnitMetricCombo }}"
-							+"</select>"
-							//---------Ingredient Amount Input Metric Ends
-							//---------Ingredient Amount Input Imperial Starts							
-							+"<label for='ingredient-amount-input-imp'>"
-								+"{{ #ui.amountImperialInput.mandatory }}"
-									+"<span class='crMandatoryInput'>*</span>"
-								+"{{ /ui.amountImperialInput.mandatory }}"
-								+"{{ ui.amountImperialInput.label }}"
-							+"</label>"
-							+"<input name='ingredient-name-input-imp' class='step-Input' value='"+item.amountImperialInput.value+"' />"
-							+"<select name='ingr-amount-units-combo-imp' class='step-Input'>"
-								+"{{ #ui.amountUnitsImperialCombo }}"
-									+"<option {{ #selected.s"+step.index+"-i"+item.index+" }} selected {{ /selected.s"+step.index+"-i"+item.index+" }} >"
-										+"{{ name }}"
-									+"</option>"
-								+"{{ /ui.amountUnitsImperialCombo }}"
-							+"</select>"
-							//---------Ingredient Amount Input Imperial Ends
-							//---------Move Ingredient Up Button Starts
-							+"<a href='#'"
-								+" title='{{ ui.moveUpButton.title }}'>"
-								+"{{ ui.moveUpButton.title }}"
-							+"</a>"
-							//---------Move Ingredient Up Button Ends
-							//---------Move Ingredient Down Button Starts
-							+"<a href='#' "
-								+"title='{{ ui.moveDownButton.title }}'>"
-								+"{{ ui.moveDownButton.title }}"
-							+"</a>"
-							//---------Move Ingredient Down Button Ends
-							//---------Delete Ingredient Up Button Starts
-							+"<a href='#' "
-								+"title='{{ ui.deleteButton.title }}'>"
-								+"{{ ui.deleteButton.title }}"
-							+"</a>"
-							//---------Delete Ingredient Up Button Ends
-			+"</div>";
-		});
-		
-		fragment+="</div>";
-		return fragment;
+								+"<input name='ingredient-amount-input-met' class='step-Input' value='{{ step.amountMetricInput.value }}' />"
+								+"<select name='ingr-amount-units-combo-met' class='step-Input'>"
+									+"{{ #amountMetricInput.amountUnitMetricCombo.unitsList }}"
+										+"<option {{ #selected }} selected {{ /selected }}>"
+											+"{{ name }}"
+										+"</option>"
+									+"{{ /amountMetricInput.amountUnitMetricCombo.unitsList }}"
+								+"</select>"
+								//---------Ingredient Amount Input Metric Ends
+								//---------Move Ingredient Up Button Starts
+								+"<a href='#'"
+									+" title='{{ ui.moveUpButton.title }}'>"
+									+"{{ ui.moveUpButton.title }}"
+								+"</a>"
+								//---------Move Ingredient Up Button Ends
+								//---------Move Ingredient Down Button Starts
+								+"<a href='#' "
+									+"title='{{ ui.moveDownButton.title }}'>"
+									+"{{ ui.moveDownButton.title }}"
+								+"</a>"
+								//---------Move Ingredient Down Button Ends
+								//---------Delete Ingredient Up Button Starts
+								+"<a href='#' "
+									+"title='{{ ui.deleteButton.title }}'>"
+									+"{{ ui.deleteButton.title }}"
+								+"</a>"
+								//---------Delete Ingredient Up Button Ends
+				+"</div>"
+			+"{{ /step.ingredients }}"
+		  +"</div>";
 }
 
 function getCRStepInstructionsTemplate(step){
