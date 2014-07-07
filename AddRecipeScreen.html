@@ -154,67 +154,106 @@
 					   },					   
 //			Recipe Usage Info Section
     "crUsageInfoSec" : {
-							"recServingInput"		:	{
-															//"id"					: "cr-rec-serving",
+							"recServingInput"		:	{															
 															"value"					: null,
 															"label"					: "Recipe Serving",//Locale Based
 															"mandatory"				: true
 														},
-							"portionSizeMetInput"	:	{
-															//"id"					: "cr-por-size-metric",
+							"portionSizeMetInput"	:	{															
 															"value"					: null,
 															"label"					: "Portion Size(m)",//Locale Based
 															"mandatory"				: false,
 															"portionUnitMetCombo"	: {
 																						"id" 		: "portion-units-metric",
 																						"unitList"	: [
-																									    { "name" : "slice" },
-																										{ "name" : "chitank" }
+																									    { 
+																											"name" 	   : "slice"
+																										},
+																										{
+																											"name" : "chitank",
+																											"selected" : true//Field added for retaining in the UI only
+																										}
 																									  ],
 																						"value"		: null
 																					  }
 														},
-							"portionSizeImpInput"	:	{
-														//	"id"					: "cr-por-size-imperial",
+							"portionSizeImpInput"	:	{														
 															"value"					: null,
 															"label"					: "Portion Size(i)",//Locale Based
 															"mandatory"				: false,
 															"portionUnitImpCombo"	: {
 																						"id" 		: "portion-units-imperial",
-																						"unitList"	: [ { "name" : "slice" } ],
+																						"unitList"	: [ 
+																										{
+																										  "name" : "slice" 
+																										},
+																										{ 
+																										  "name" : "chitank",
+																										  "selected" : true//Field added for retaining in the UI only
+																										}
+																									  ],
 																						"value"		: null
 																					  }
 														},
-							"servingUtensilCombo"	:	{
-															//"id"					: "serving-utensil-combo",
+							"servingUtensilCombo"	:	{															
 															"label"					: "Serving Utensil",//Locale Based
-															"utensilList"			: [ { "name" : "Tongs" } ],
+															"utensilList"			: [
+																						{
+																						  "name" : "Tongs"
+																						},
+																						{ 
+																						  "name" 	: "Wongs",
+																						  "selected": true
+																						}
+																					  ],
 															"value"				    : null
 														},
-							"recipeCategoriesCombo" :	{
-															//"id"					: "rec-categories-combo",
+							"recipeCategoriesCombo" :	{															
 															"label"					: "Categories",//Locale Based
-															"categoryList"			: [ { "name" : "Accompaniments" } ],
+															"categoryList"			: [
+																						{
+																						  "name" : "Accompaniments"
+																						},
+																						{ 
+																						  "name" : "Waccompaniments",
+																						  "selected": true
+																						}
+																					  ],
 															"mandatory"				: true,
 															"value"				    : null
 														},
-							"estimatedCostInput"	:	{
-															//"id"					: "est-cost-input",
+							"estimatedCostInput"	:	{															
 															"label"					: "Estimated Cost",//Locale Based
 															"value"					: null,
 															"mandatory"				: true
 														},
-							"therapeuticDimensionMultiSelect"	: {
-																	//"id"			: "therapeutic-dimentsion-multi-select",
+							"therapeuticDimensionMultiSelect"	: {																	
 																	"label"			: "Therapeutic Dimensions",//Locale Based
-																	"therapeuticsList" : [ { "name" : "Gluten Free" }, { "name" : "Lacto Ovo Vegetarian"}, { "name" : "Modified Diabetic Maintenance" } ],
+																	"therapeuticsList" : [
+																						    {
+																								"name" : "Gluten Free" 
+																							},
+																						    {
+																								"name" : "Lacto Ovo Vegetarian",
+																								"selected" : true
+																							}, 
+																							{
+																								"name" : "Modified Diabetic Maintenance"
+																								
+																							}
+																						 ],
 																	"mandatory"		: true,
 																	"value"    	    : null
 																  },
-							"crStatusCombo"			: 	{
-																//"id"				: "cr-status-text",
+							"crStatusCombo"			: 	{																
 																"label"				: "Recipe Status",//Locale Based
-																"statusList"		: [ { "name" : "Draft" } ],
+																"statusList"		: [ 
+																						{ "name" : "Draft" },
+																						{ 
+																							"name" : "Published",
+																							"selected" : true
+																						}
+																					  ],
 																"mandatory"			: false,
 															    "value"             : null
 														}
@@ -687,23 +726,7 @@ function getCRIngredientsTemplate(){
 								+"</label>"
 								+"<input name='ingredient-name-input-fr' value='{{ step.ingrNameInputFR.value }}' />"
 							+"{{ /showFRLocaleFields }}"
-							//---------Ingredient Name Input Fr Ends
-							//---------Ingredient Amount Input Metric Starts							
-							+"<label for='ingredient-amount-input-met'>"
-								+"{{ #ui.amountMetricInput.mandatory }}"
-									+"<span class='crMandatoryInput'>*</span>"
-								+"{{ /ui.amountMetricInput.mandatory }}"
-								+"{{ ui.amountMetricInput.label }}"
-							+"</label>"
-							+"<input name='ingredient-amount-input-met' class='step-Input' value='{{ step.amountMetricInput.value }}' />"
-							+"<select name='ingr-amount-units-combo-met' class='step-Input'>"
-								+"{{ #ui.amountUnitMetricCombo }}"
-									+"<option>"
-										+"{{ name }}"
-									+"</option>"
-								+"{{ /ui.amountUnitMetricCombo }}"
-							+"</select>"
-							//---------Ingredient Amount Input Metric Ends
+							//---------Ingredient Name Input Fr Ends							
 							//---------Ingredient Amount Input Imperial Starts							
 							+"<label for='ingredient-amount-input-imp'>"
 								+"{{ #ui.amountImperialInput.mandatory }}"
@@ -720,6 +743,22 @@ function getCRIngredientsTemplate(){
 								+"{{ /ui.amountUnitsImperialCombo }}"
 							+"</select>"
 							//---------Ingredient Amount Input Imperial Ends
+							//---------Ingredient Amount Input Metric Starts							
+							+"<label for='ingredient-amount-input-met'>"
+								+"{{ #ui.amountMetricInput.mandatory }}"
+									+"<span class='crMandatoryInput'>*</span>"
+								+"{{ /ui.amountMetricInput.mandatory }}"
+								+"{{ ui.amountMetricInput.label }}"
+							+"</label>"
+							+"<input name='ingredient-amount-input-met' class='step-Input' value='{{ step.amountMetricInput.value }}' />"
+							+"<select name='ingr-amount-units-combo-met' class='step-Input'>"
+								+"{{ #ui.amountUnitMetricCombo }}"
+									+"<option>"
+										+"{{ name }}"
+									+"</option>"
+								+"{{ /ui.amountUnitMetricCombo }}"
+							+"</select>"
+							//---------Ingredient Amount Input Metric Ends
 							//---------Move Ingredient Up Button Starts
 							+"<a href='#'"
 								+" title='{{ ui.moveUpButton.title }}'>"
@@ -942,7 +981,7 @@ function getCustomRecipeUsageInfoTemplate(){
 					+"/>"
 					+"<select id='cr-portion-size-m-combo' class='smallSelect' name='cr-portion-size-m-combo'>"
 						+"{{ #crUsageInfoSec.portionSizeMetInput.portionUnitMetCombo.unitList }}"
-							+"<option>"
+							+"<option {{ #selected }} selected {{ /selected }}>"
 								+"{{ name }}"
 							+"</option>"
 						+"{{ /crUsageInfoSec.portionSizeMetInput.portionUnitMetCombo.unitList }}"
@@ -960,7 +999,7 @@ function getCustomRecipeUsageInfoTemplate(){
 					+"/>"
 					+"<select id='cr-portion-size-i-combo' class='smallSelect' name='cr-portion-size-i-combo'>"
 						+"{{ #crUsageInfoSec.portionSizeImpInput.portionUnitImpCombo.unitList }}"
-							+"<option>{{ name }}</option>"
+							+"<option {{ #selected }} selected {{ /selected }} >{{ name }}</option>"
 						+"{{ /crUsageInfoSec.portionSizeImpInput.portionUnitImpCombo.unitList }}"
 					+"</select>"
 					//---------Portion Size Imperial Input Ends
@@ -973,7 +1012,7 @@ function getCustomRecipeUsageInfoTemplate(){
 					+"<label for='cr-serving-utensil'>{{ crUsageInfoSec.servingUtensilCombo.label }}</label>"
 					+"<select id='cr-serving-utensil' name='cr-serving-utensil'>"
 						+"{{ #crUsageInfoSec.servingUtensilCombo.utensilList }}"
-							+"<option>{{ name }}</option>"
+							+"<option {{ #selected }} selected {{ /selected }}>{{ name }}</option>"
 						+"{{ /crUsageInfoSec.servingUtensilCombo.utensilList }}"
 					+"</select>"
 					//---------Serving Utensil Combo Input Ends
@@ -988,7 +1027,7 @@ function getCustomRecipeUsageInfoTemplate(){
 					+"</label>"
 					+"<select id='cr-categories-combo' name='cr-categories-combo'>"				
 						+"{{ #crUsageInfoSec.recipeCategoriesCombo.categoryList }}"
-							+"<option>{{ name }}</option>"
+							+"<option {{ #selected }} selected {{ /selected }}>{{ name }}</option>"
 						+"{{ /crUsageInfoSec.recipeCategoriesCombo.categoryList }}"
 					+"</select>"
 					//---------Categories Combo Input Ends
@@ -1018,7 +1057,7 @@ function getCustomRecipeUsageInfoTemplate(){
 					+"</label>"
 					+"<select id='cr-therapeuctics-combo' name='cr-therapeuctics-combo'  multiple>"
 						+"{{ #crUsageInfoSec.therapeuticDimensionMultiSelect.therapeuticsList }}"
-							+"<option>{{ name }}</option>"
+							+"<option {{ #selected }} selected {{ /selected }}>{{ name }}</option>"
 						+"{{ /crUsageInfoSec.therapeuticDimensionMultiSelect.therapeuticsList }}"
 					+"</select>"
 					//---------Therapeutic Dimensions Combo Input Ends
@@ -1031,7 +1070,7 @@ function getCustomRecipeUsageInfoTemplate(){
 					+"<label for='cr-status-combo'>{{ crUsageInfoSec.crStatusCombo.label }}</label>"
 					+"<select id='cr-status-combo' name='cr-status-combo'>"
 						+"{{ #crUsageInfoSec.crStatusCombo.statusList }}"
-							+"<option>{{ name }}</option>"
+							+"<option {{ #selected }} selected {{ /selected }}>{{ name }}</option>"
 						+"{{ /crUsageInfoSec.crStatusCombo.statusList }}"
 					+"</select>"				
 					//---------Recipe Status Combo Ends
