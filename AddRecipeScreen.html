@@ -286,15 +286,35 @@
 																				"mandatory"	: false
 																			  },
 													"amountMetricInput"		: {
-																				"label"		: "Amount(I)",//Locale Based
+																				"label"		: "Amount(M)",//Locale Based
 																				"mandatory" : false
 																			  },
 													"amountImperialInput"	: {
-																				"label"		: "Amount(M)",//Locale Based
+																				"label"		: "Amount(I)",//Locale Based
 																				"mandatory"	: false
 																			  },
-													"amountUnitsImperialCombo"		: [ { "name" : "each" } ],//From Data Base
-													"amountUnitMetricCombo"			: [ { "name" : "each" } ],//From Data Base
+													"amountUnitsImperialCombo"		: [//From Data Base
+																						{ 
+																							"name" : "each"
+																						},
+																						{ 
+																						  "name" : "Weach",
+																						  "selected" : {
+																											"s1-i1" : true,
+																											"s2-i1" : true
+																									   }
+																						}
+																					  ],
+													"amountUnitMetricCombo"			: [//From Data Base
+																						{ "name" : "each" },
+																						{
+																							"name" : "Weach",
+																							"selected" : {
+																											"s1-i1" : true,
+																											"s2-i1" : true
+																										 }
+																						}
+																					  ],
 													"moveUpButton"			: {
 																				"image"		: "",//Image Path
 																				"title"		: "Move Up"//Locale Based
@@ -324,17 +344,36 @@
 												"index"			: 	1,
 												"ingredients"	:	[
 																		{
+																			"index"					: 1,
 																			"ingrNameInputEN" 		: {
-																										"value" : null
+																										"value" : ""
 																									  },
 																			"ingrNameInputFR" 		: {
-																										"value" : null
+																										"value" : ""
 																									  },
 																		    "amountMetricInput"		: {
-																									    "value" : null
+																									    "value" : ""
 																									  },
 																			"amountImperialInput"	: {
-																										"value"	: null
+																										"value"	: ""
+																									  },
+																		    "moveUpButton"			: {},
+																			"moveDownButton"		: {},
+																			"deleteButton"			: {},
+																		},
+																		{
+																			"index"					: 2,
+																			"ingrNameInputEN" 		: {
+																										"value" : ""
+																									  },
+																			"ingrNameInputFR" 		: {
+																										"value" : ""
+																									  },
+																		    "amountMetricInput"		: {
+																									    "value" : ""
+																									  },
+																			"amountImperialInput"	: {
+																										"value"	: ""
 																									  },
 																		    "moveUpButton"			: {},
 																			"moveDownButton"		: {},
@@ -354,17 +393,18 @@
 												"index"			:	2,
 												"ingredients"	:	[
 																		{
+																			"index"					: 1,
 																			"ingrNameInputEN" 		: {
-																										"value" : null
+																										"value" : ""
 																									  },
 																			"ingrNameInputFR" 		: {
-																										"value" : null
+																										"value" : ""
 																									  },
 																		    "amountMetricInput"		: {
-																									    "value" : null
+																									    "value" : ""
 																									  },
 																			"amountImperialInput"	: {
-																										"value"	: null
+																										"value"	: ""
 																									  },
 																		    "moveUpButton"			: {},
 																			"moveDownButton"		: {},
@@ -612,7 +652,7 @@ function ignition(){
 	);
 }
 
-function renderIndividualStep(step){	
+function renderIndividualStep(step){
 	generateStepHeader(step);
 	generateStepIngredients(step);
 	generateStepInstructions(step);
@@ -632,7 +672,7 @@ function generateStepIngredients(step){
 	//---------Step Ingredients Generation Starts
 	renderTemplate(
 				"#step-" + step.index + "-ingredients",
-				cr_step_ingredients_tepmplate, getCRIngredientsTemplate(),
+				cr_step_ingredients_tepmplate, getCRStepIngredientsTemplate(step),
 				{
 				  "showAllLocaleFields" : data.showAllLocaleFields,
 				  "showENLocaleFields"  : data.showENLocaleFields,	
@@ -697,14 +737,15 @@ function getCRHeaderTemplate(){
 		   //---------Delete Step Button Ends		   			
 }
 
-function getCRIngredientsTemplate(){
-	return "<div class=step-ingredients-header>"
+function getCRStepIngredientsTemplate(step){
+	var fragment =  "<div class=step-ingredients-header>"
 				+"{{ ui.ingeredientsLabel }}"
 				+"<button>{{ ui.addIngredientsLabel }}</button>"
 		  +"</div>"
-		  +"<div class='step-ingredients-list'>"
-			+"<div name='ingredient-item' class='ingredient-item'>"
-				+"{{ #step.ingredients }}"																			
+		  +"<div class='step-ingredients-list'>";
+		  
+		$.each(step.ingredients, function(index, item){
+			fragment += "<div name='ingredient-item' class='ingredient-item'>"
 							//---------Ingredient Name Input En Starts
 							+"{{ #showENLocaleFields }}"								
 								+"<label for='ingredient-name-input-en'>"
@@ -713,7 +754,7 @@ function getCRIngredientsTemplate(){
 									+"{{ /ui.ingrNameInputEN.mandatory }}"
 									+"{{ ui.ingrNameInputEN.label }}"
 								+"</label>"
-								+"<input name='ingredient-name-input-en' value='{{ step.ingrNameInputEN.value }}' />"
+								+"<input name='ingredient-name-input-en' value='"+item.ingrNameInputEN.value+"' />"
 							+"{{ /showENLocaleFields }}"
 							//---------Ingredient Name Input En Ends
 							//---------Ingredient Name Input Fr Starts
@@ -724,25 +765,9 @@ function getCRIngredientsTemplate(){
 								+"{{ /ui.ingrNameInputFR.mandatory }}"
 								+"{{ ui.ingrNameInputFR.label }}"
 								+"</label>"
-								+"<input name='ingredient-name-input-fr' value='{{ step.ingrNameInputFR.value }}' />"
+								+"<input name='ingredient-name-input-fr' value='"+item.ingrNameInputFR.value+"' />"
 							+"{{ /showFRLocaleFields }}"
 							//---------Ingredient Name Input Fr Ends							
-							//---------Ingredient Amount Input Imperial Starts							
-							+"<label for='ingredient-amount-input-imp'>"
-								+"{{ #ui.amountImperialInput.mandatory }}"
-									+"<span class='crMandatoryInput'>*</span>"
-								+"{{ /ui.amountImperialInput.mandatory }}"
-								+"{{ ui.amountImperialInput.label }}"
-							+"</label>"
-							+"<input name='ingredient-name-input-imp' class='step-Input' value='{{ step.amountImperialInput.value }}' />"
-							+"<select name='ingr-amount-units-combo-imp' class='step-Input'>"
-								+"{{ #ui.amountUnitsImperialCombo }}"
-									+"<option>"
-										+"{{ name }}"
-									+"</option>"
-								+"{{ /ui.amountUnitsImperialCombo }}"
-							+"</select>"
-							//---------Ingredient Amount Input Imperial Ends
 							//---------Ingredient Amount Input Metric Starts							
 							+"<label for='ingredient-amount-input-met'>"
 								+"{{ #ui.amountMetricInput.mandatory }}"
@@ -750,15 +775,31 @@ function getCRIngredientsTemplate(){
 								+"{{ /ui.amountMetricInput.mandatory }}"
 								+"{{ ui.amountMetricInput.label }}"
 							+"</label>"
-							+"<input name='ingredient-amount-input-met' class='step-Input' value='{{ step.amountMetricInput.value }}' />"
+							+"<input name='ingredient-amount-input-met' class='step-Input' value='"+item.amountMetricInput.value+"' />"
 							+"<select name='ingr-amount-units-combo-met' class='step-Input'>"
 								+"{{ #ui.amountUnitMetricCombo }}"
-									+"<option>"
+									+"<option {{ #selected.s"+step.index+"-i"+item.index+" }} selected {{ /selected.s"+step.index+"-i"+item.index+" }} >"
 										+"{{ name }}"
 									+"</option>"
 								+"{{ /ui.amountUnitMetricCombo }}"
 							+"</select>"
 							//---------Ingredient Amount Input Metric Ends
+							//---------Ingredient Amount Input Imperial Starts							
+							+"<label for='ingredient-amount-input-imp'>"
+								+"{{ #ui.amountImperialInput.mandatory }}"
+									+"<span class='crMandatoryInput'>*</span>"
+								+"{{ /ui.amountImperialInput.mandatory }}"
+								+"{{ ui.amountImperialInput.label }}"
+							+"</label>"
+							+"<input name='ingredient-name-input-imp' class='step-Input' value='"+item.amountImperialInput.value+"' />"
+							+"<select name='ingr-amount-units-combo-imp' class='step-Input'>"
+								+"{{ #ui.amountUnitsImperialCombo }}"
+									+"<option {{ #selected.s"+step.index+"-i"+item.index+" }} selected {{ /selected.s"+step.index+"-i"+item.index+" }} >"
+										+"{{ name }}"
+									+"</option>"
+								+"{{ /ui.amountUnitsImperialCombo }}"
+							+"</select>"
+							//---------Ingredient Amount Input Imperial Ends
 							//---------Move Ingredient Up Button Starts
 							+"<a href='#'"
 								+" title='{{ ui.moveUpButton.title }}'>"
@@ -777,9 +818,11 @@ function getCRIngredientsTemplate(){
 								+"{{ ui.deleteButton.title }}"
 							+"</a>"
 							//---------Delete Ingredient Up Button Ends
-				+"{{ /step.ingredients }}"
-			+"</div>"
-		  +"</div>"
+			+"</div>";
+		});
+		
+		fragment+="</div>";
+		return fragment;
 }
 
 function getCRStepInstructionsTemplate(step){
@@ -1381,9 +1424,9 @@ function langFilterCRBasicInfoEH(event, languageId){
 
 function takeCRBasicInfoSnapShotEH(event){
 	data.crBasicInfoSec.enInfo.crNameInput.value = $("#cr-name-en").val();
-	data.crBasicInfoSec.enInfo.crFriendlyNameInput.value = $("#cr-friendly-name-en").val();	
+	data.crBasicInfoSec.enInfo.crFriendlyNameInput.value = $("#cr-friendly-name-en").val();
 	data.crBasicInfoSec.frInfo.crNameInput.value = $("#cr-name-fr").val();
-	data.crBasicInfoSec.frInfo.crFriendlyNameInput.value = $("#cr-name-fr").val();
+	data.crBasicInfoSec.frInfo.crFriendlyNameInput.value = $("#cr-friendly-name-fr").val();
 }
 
 function takeCRUsageInfoSnapShotEH(event){
