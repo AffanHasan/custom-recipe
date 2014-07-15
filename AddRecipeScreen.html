@@ -1074,7 +1074,7 @@ function getCustomRecipeUsageInfoTemplate(){
 					+"<input onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-portion-size-m' name='cr-portion-size-m' type='text'"
 						+" value='{{ crUsageInfoSec.portionSizeMetInput.value }}' "
 					+"/>"
-					+"<select id='cr-portion-size-m-combo' class='smallSelect' name='cr-portion-size-m-combo'>"
+					+"<select onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-portion-size-m-combo' class='smallSelect' name='cr-portion-size-m-combo'>"
 						+"{{ #crUsageInfoSec.portionSizeMetInput.portionUnitMetCombo.unitList }}"
 							+"<option {{ #selected }} selected {{ /selected }}>"
 								+"{{ name }}"
@@ -1092,7 +1092,7 @@ function getCustomRecipeUsageInfoTemplate(){
 					+"<input onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-portion-size-i' name='cr-portion-size-i' type='text'"
 						+" value='{{ crUsageInfoSec.portionSizeImpInput.value }}' "
 					+"/>"
-					+"<select id='cr-portion-size-i-combo' class='smallSelect' name='cr-portion-size-i-combo'>"
+					+"<select onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-portion-size-i-combo' class='smallSelect' name='cr-portion-size-i-combo'>"
 						+"{{ #crUsageInfoSec.portionSizeImpInput.portionUnitImpCombo.unitList }}"
 							+"<option {{ #selected }} selected {{ /selected }} >{{ name }}</option>"
 						+"{{ /crUsageInfoSec.portionSizeImpInput.portionUnitImpCombo.unitList }}"
@@ -1105,7 +1105,7 @@ function getCustomRecipeUsageInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /crUsageInfoSec.servingUtensilCombo.mandatory }}"
 					+"<label for='cr-serving-utensil'>{{ crUsageInfoSec.servingUtensilCombo.label }}</label>"
-					+"<select id='cr-serving-utensil' name='cr-serving-utensil'>"
+					+"<select onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-serving-utensil' name='cr-serving-utensil'>"
 						+"{{ #crUsageInfoSec.servingUtensilCombo.utensilList }}"
 							+"<option {{ #selected }} selected {{ /selected }}>{{ name }}</option>"
 						+"{{ /crUsageInfoSec.servingUtensilCombo.utensilList }}"
@@ -1120,7 +1120,7 @@ function getCustomRecipeUsageInfoTemplate(){
 						+"{{ /crUsageInfoSec.recipeCategoriesCombo.mandatory }}"
 						+"{{ crUsageInfoSec.recipeCategoriesCombo.label }}"
 					+"</label>"
-					+"<select id='cr-categories-combo' name='cr-categories-combo'>"				
+					+"<select onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-categories-combo' name='cr-categories-combo'>"				
 						+"{{ #crUsageInfoSec.recipeCategoriesCombo.categoryList }}"
 							+"<option {{ #selected }} selected {{ /selected }}>{{ name }}</option>"
 						+"{{ /crUsageInfoSec.recipeCategoriesCombo.categoryList }}"
@@ -1490,14 +1490,71 @@ function takeCRBasicInfoSnapShotEH(event){
 }
 
 function takeCRUsageInfoSnapShotEH(event){
-	data.crUsageInfoSec.recServingInput.value = $("#cr-serving").val();
-	data.crUsageInfoSec.portionSizeMetInput.value = $("#cr-portion-size-m").val();
-	data.crUsageInfoSec.portionSizeImpInput.value = $("#cr-portion-size-i").val();
-	data.crUsageInfoSec.servingUtensilCombo.value = $("#cr-serving-utensil").val();
-	data.crUsageInfoSec.recipeCategoriesCombo.value = $("#cr-categories-combo").val();
-	data.crUsageInfoSec.estimatedCostInput.value = $("#cr-est-cost").val();
-	data.crUsageInfoSec.therapeuticDimensionMultiSelect.value = $("#cr-therapeuctics-combo").val();
-	data.crUsageInfoSec.crStatusCombo.value = $("#cr-status-combo").val();
+//Recipe Serving
+	data.crUsageInfoSec.recServingInput.value = 
+	($("#cr-serving").val() == undefined) ? data.crUsageInfoSec.recServingInput.value : $("#cr-serving").val();
+//Portion Size m
+	data.crUsageInfoSec.portionSizeMetInput.value = 
+	($("#cr-portion-size-m").val() == undefined) ? data.crUsageInfoSec.portionSizeMetInput.value : $("#cr-portion-size-m").val();
+//Portion Size m combo
+	if($("#cr-portion-size-m-combo").val() != undefined){
+		data.crUsageInfoSec.portionSizeMetInput.portionUnitMetCombo.value = $("#cr-portion-size-m-combo").val();
+		$.each(data.crUsageInfoSec.portionSizeMetInput.portionUnitMetCombo.unitList, function(index, item){
+			if( item.name == $("#cr-portion-size-m-combo").val() ){
+				item.selected = true;
+			}else{
+				delete item.selected;
+			}
+		});
+	}
+//Portion Size i
+	data.crUsageInfoSec.portionSizeImpInput.value = 
+	($("#cr-portion-size-i").val() == undefined) ? data.crUsageInfoSec.portionSizeImpInput.value : $("#cr-portion-size-i").val();
+//Portion Size i combo
+	if($("#cr-portion-size-i-combo").val() != undefined){
+		data.crUsageInfoSec.portionSizeImpInput.portionUnitImpCombo.value = $("#cr-portion-size-i-combo").val();
+		$.each(data.crUsageInfoSec.portionSizeImpInput.portionUnitImpCombo.unitList, function(index, item){
+			if( item.name == $("#cr-portion-size-i-combo").val() ){
+				item.selected = true;
+			}else{
+				delete item.selected;
+			}
+		});
+	}
+//Serving Utensil	
+	if($("#cr-serving-utensil").val() != undefined){
+		data.crUsageInfoSec.servingUtensilCombo.value = $("#cr-serving-utensil").val();
+		$.each(data.crUsageInfoSec.servingUtensilCombo.utensilList, function(index, item){
+			if( item.name == $("#cr-serving-utensil").val() ){
+				item.selected = true;
+			}else{
+				delete item.selected;
+			}
+		});
+	}
+//Categories
+	data.crUsageInfoSec.recipeCategoriesCombo.value =
+	($("#cr-categories-combo").val() == undefined) ? data.crUsageInfoSec.recipeCategoriesCombo.value : $("#cr-categories-combo").val();
+	if($("#cr-categories-combo").val() != undefined){
+		data.crUsageInfoSec.recipeCategoriesCombo.value = $("#cr-categories-combo").val();
+		$.each(data.crUsageInfoSec.recipeCategoriesCombo.categoryList, function(index, item){
+			if( item.name == $("#cr-categories-combo").val() ){
+				item.selected = true;
+			}else{
+				delete item.selected;
+			}
+		});
+	}
+	
+//Est Cost
+	data.crUsageInfoSec.estimatedCostInput.value =
+	($("#cr-est-cost").val() == undefined) ? data.crUsageInfoSec.estimatedCostInput.value : $("#cr-est-cost").val();
+//Therapeutic Dimensions
+	data.crUsageInfoSec.therapeuticDimensionMultiSelect.value =
+	($("#cr-therapeuctics-combo").val() == undefined) ? data.crUsageInfoSec.therapeuticDimensionMultiSelect.value : $("#cr-therapeuctics-combo").val();
+//Recipe Status
+	data.crUsageInfoSec.crStatusCombo.value =
+	($("#cr-status-combo").val() == undefined) ? data.crUsageInfoSec.crStatusCombo.value : $("#cr-status-combo").val();
 }
 //---------Event Handler Function Definitions Ends
 		</script>
