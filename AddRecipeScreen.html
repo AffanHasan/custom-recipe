@@ -1475,10 +1475,18 @@ function langFilterCRBasicInfoEH(event, languageId){
 }
 
 function takeCRBasicInfoSnapShotEH(event){
-	data.crBasicInfoSec.enInfo.crNameInput.value = $("#cr-name-en").val();
-	data.crBasicInfoSec.enInfo.crFriendlyNameInput.value = $("#cr-friendly-name-en").val();
-	data.crBasicInfoSec.frInfo.crNameInput.value = $("#cr-name-fr").val();
-	data.crBasicInfoSec.frInfo.crFriendlyNameInput.value = $("#cr-friendly-name-fr").val();
+//	English name
+	data.crBasicInfoSec.enInfo.crNameInput.value = 
+	($("#cr-name-en").val() == undefined) ? data.crBasicInfoSec.enInfo.crNameInput.value : $("#cr-name-en").val();
+//	English friendly name
+	data.crBasicInfoSec.enInfo.crFriendlyNameInput.value = 
+	($("#cr-friendly-name-en").val() == undefined) ? data.crBasicInfoSec.enInfo.crFriendlyNameInput.value : $("#cr-friendly-name-en").val();
+//	English French name
+	data.crBasicInfoSec.frInfo.crNameInput.value = 
+	($("#cr-name-fr").val() == undefined) ? data.crBasicInfoSec.frInfo.crNameInput.value : $("#cr-name-fr").val();
+//	English French friendly name
+	data.crBasicInfoSec.frInfo.crFriendlyNameInput.value = 
+	($("#cr-friendly-name-fr").val() == undefined) ? data.crBasicInfoSec.frInfo.crFriendlyNameInput.value : $("#cr-friendly-name-fr").val();
 }
 
 function takeCRUsageInfoSnapShotEH(event){
