@@ -243,9 +243,9 @@
 																							}
 																						 ],
 																	"mandatory"		: true,
-																	"value"    	    : null
+																	"value"    	    : []
 																  },
-							"crStatusCombo"			: 	{																
+							"crStatusCombo"			: 	{
 																"label"				: "Recipe Status",//Locale Based
 																"statusList"		: [ 
 																						{ "name" : "Draft" },
@@ -1150,7 +1150,7 @@ function getCustomRecipeUsageInfoTemplate(){
 						+"{{ /crUsageInfoSec.therapeuticDimensionMultiSelect.mandatory }}"
 						+"{{ crUsageInfoSec.therapeuticDimensionMultiSelect.label }}"
 					+"</label>"
-					+"<select id='cr-therapeuctics-combo' name='cr-therapeuctics-combo'  multiple>"
+					+"<select onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-therapeuctics-combo' name='cr-therapeuctics-combo'  multiple>"
 						+"{{ #crUsageInfoSec.therapeuticDimensionMultiSelect.therapeuticsList }}"
 							+"<option {{ #selected }} selected {{ /selected }}>{{ name }}</option>"
 						+"{{ /crUsageInfoSec.therapeuticDimensionMultiSelect.therapeuticsList }}"
@@ -1163,7 +1163,7 @@ function getCustomRecipeUsageInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /crUsageInfoSec.crStatusCombo.mandatory }}"
 					+"<label for='cr-status-combo'>{{ crUsageInfoSec.crStatusCombo.label }}</label>"
-					+"<select id='cr-status-combo' name='cr-status-combo'>"
+					+"<select onchange='takeCRUsageInfoSnapShotEH(event)' id='cr-status-combo' name='cr-status-combo'>"
 						+"{{ #crUsageInfoSec.crStatusCombo.statusList }}"
 							+"<option {{ #selected }} selected {{ /selected }}>{{ name }}</option>"
 						+"{{ /crUsageInfoSec.crStatusCombo.statusList }}"
@@ -1550,11 +1550,28 @@ function takeCRUsageInfoSnapShotEH(event){
 	data.crUsageInfoSec.estimatedCostInput.value =
 	($("#cr-est-cost").val() == undefined) ? data.crUsageInfoSec.estimatedCostInput.value : $("#cr-est-cost").val();
 //Therapeutic Dimensions
-	data.crUsageInfoSec.therapeuticDimensionMultiSelect.value =
-	($("#cr-therapeuctics-combo").val() == undefined) ? data.crUsageInfoSec.therapeuticDimensionMultiSelect.value : $("#cr-therapeuctics-combo").val();
+	if( $("#cr-therapeuctics-combo").val() != undefined || $("#cr-therapeuctics-combo").val() != null ){
+		$.each($("#cr-therapeuctics-combo").val(), function(index, item){
+			data.crUsageInfoSec.therapeuticDimensionMultiSelect.value.push(item);
+		});		 
+		$.each(data.crUsageInfoSec.therapeuticDimensionMultiSelect.therapeuticsList, function(index, item){			
+			if( $("#cr-therapeuctics-combo").val().indexOf(item.name) != -1 ){
+				item.selected = true;
+			}else{
+				delete item.selected;
+			}
+		});
+	}	
 //Recipe Status
 	data.crUsageInfoSec.crStatusCombo.value =
 	($("#cr-status-combo").val() == undefined) ? data.crUsageInfoSec.crStatusCombo.value : $("#cr-status-combo").val();
+	$.each(data.crUsageInfoSec.crStatusCombo.statusList, function(index, item){
+		if( $("#cr-status-combo").val() == item.name ){
+			item.selected = true;
+		}else{
+			delete item.selected;
+		}
+	});
 }
 //---------Event Handler Function Definitions Ends
 		</script>
