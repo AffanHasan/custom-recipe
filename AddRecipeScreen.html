@@ -688,13 +688,6 @@ function ignition(){
 	renderTemplate("#cr-nutritional-info", cr_nutritional_info_tepmplate, getNutritionalsInfoTemplate(), data);	
 	renderTemplate("#cr-notes-info", cr_admin_notes_tepmplate, getCRAdminNotesTemplate(), data);
 	renderTemplate("#cr-controls", cr_controls_tepmplate, getCRControlsTemplate(), data);
-	//---------Making the steps sortable
-	$("#cr-preparation-steps-list").sortable(
-		{
-			"handle"	: ".cr-preparation-step-header",
-			"axis"		: "y"
-		}
-	);
 }
 
 /*
@@ -711,8 +704,41 @@ function generatePreparationSteps(){
 			renderIndividualStep(step);
 		});
 		//---------Generate Individual Steps Based Upon Above Scaffolding Ends
-	//---------Generate Preparation Steps Ends
-
+	//---------Generate Preparation Steps Ends	
+	//---------Making the steps sortable
+	var start, stop;
+	$("#cr-preparation-steps-list").sortable(
+		{
+			"handle"	: ".cr-preparation-step-header",
+			"axis"		: "y",
+			"start"	    : function(event, ui){
+							start = ui.item.index();
+							console.log(start);
+						 },
+			"stop" 	   	: function( event, ui ){
+							stop = ui.item.index();
+							console.log(stop);							
+							if(start == stop){//Since element is not dragged hence returning
+								generatePreparationSteps();
+								return false;
+							}
+							var element = data.preparationStepsSec.steps[ start ];
+//							Removing from the list
+							data.preparationStepsSec.steps.splice( start, 1 );
+							if(start > stop){//It means up
+//								Swapping into the list
+								console.log(ui.item.context.nextSibling);
+								data.preparationStepsSec.steps.splice( stop,0, element );
+							}else if( start < stop ){//It means down
+//								Swapping into the list
+								console.log(ui.item.context.previousSibling);
+								data.preparationStepsSec.steps.splice( stop,0, element );
+							}
+							sortPreparationStepsIndexField();
+							generatePreparationSteps();
+						 }
+		}
+	);
 }
 
 /*
@@ -1686,7 +1712,7 @@ function addStepButtonEH(event){
 							],
 		"instructions"	:	{
 								"enTextArea"	: {
-													"value"		: "Go Ahead!"
+													"value"		: "Step: " + (data.preparationStepsSec.steps.length + 1)
 												  },
 								"frTextArea"	: {
 													"value"		: null
