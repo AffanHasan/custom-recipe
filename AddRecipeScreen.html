@@ -697,6 +697,9 @@ function ignition(){
 	);
 }
 
+/*
+	This function generates the custom recipe preparation steps provided the 'data' is ready
+*/
 function generatePreparationSteps(){
 
 	//---------Generate Preparation Steps Starts
@@ -710,6 +713,15 @@ function generatePreparationSteps(){
 		//---------Generate Individual Steps Based Upon Above Scaffolding Ends
 	//---------Generate Preparation Steps Ends
 
+}
+
+/*
+	This function is used to sort the 'index' key in 'data.preparationStepsSec.steps' list of JSON documents
+*/
+function sortPreparationStepsIndexField(){
+	$.each(data.preparationStepsSec.steps , function(index, step){
+			step.index = index + 1;
+		});
 }
 
 function renderIndividualStep(step){
@@ -791,7 +803,7 @@ function renderTemplate(selector, tempName, templateDef, data){
 function getCRHeaderTemplate(){
 	return "<h3> {{ ui.stepLabel }}" + " " + "{{ step.index }} </h3>"		  
 		   //---------Delete Step Button Starts
-		  +"<a title='{{ ui.deleteStepButton.label }}'>"
+		  +"<a onclick='deleteStepButtonEH(event, {{ step.index }})' title='{{ ui.deleteStepButton.label }}'>"
 			+"{{ ui.deleteStepButton.label }}"
 		  +"</a>";
 		   //---------Delete Step Button Ends		   			
@@ -1681,6 +1693,12 @@ function addStepButtonEH(event){
 												  }
 							}
 	});
+	generatePreparationSteps();
+}
+
+function deleteStepButtonEH(event, index){	
+	data.preparationStepsSec.steps.splice(index-1, 1); 
+	sortPreparationStepsIndexField();
 	generatePreparationSteps();
 }
 //---------Event Handler Function Definitions Ends
