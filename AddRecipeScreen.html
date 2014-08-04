@@ -683,18 +683,8 @@ function main(){
 
 function ignition(){
 	renderTemplate("#cr-basic-info", cr_basic_info_tepmplate, getCustomRecipeBasicInfoTemplate(), data);
-	renderTemplate("#cr-usage-info", cr_usage_info_tepmplate, getCustomRecipeUsageInfoTemplate(), data);
-	
-	//---------Generate Preparation Steps Starts
-		//---------Generate Preparation Steps Scaffolding Starts
-		renderTemplate("#cr-preparation-steps-info", cr_preparation_steps_info_scaffolding_tepmplate, getPrepearationStepsScaffoldingTemplate(), data);
-		//---------Generate Preparation Steps Scaffolding Ends
-		//---------Generate Individual Steps Based Upon Above Scaffolding Starts
-		$.each(data.preparationStepsSec.steps , function(index, step){
-			renderIndividualStep(step);
-		});
-		//---------Generate Individual Steps Based Upon Above Scaffolding Ends
-	//---------Generate Preparation Steps Ends	
+	renderTemplate("#cr-usage-info", cr_usage_info_tepmplate, getCustomRecipeUsageInfoTemplate(), data);	
+	generatePreparationSteps();
 	renderTemplate("#cr-nutritional-info", cr_nutritional_info_tepmplate, getNutritionalsInfoTemplate(), data);	
 	renderTemplate("#cr-notes-info", cr_admin_notes_tepmplate, getCRAdminNotesTemplate(), data);
 	renderTemplate("#cr-controls", cr_controls_tepmplate, getCRControlsTemplate(), data);
@@ -705,6 +695,21 @@ function ignition(){
 			"axis"		: "y"
 		}
 	);
+}
+
+function generatePreparationSteps(){
+
+	//---------Generate Preparation Steps Starts
+		//---------Generate Preparation Steps Scaffolding Starts
+		renderTemplate("#cr-preparation-steps-info", cr_preparation_steps_info_scaffolding_tepmplate, getPrepearationStepsScaffoldingTemplate(), data);
+		//---------Generate Preparation Steps Scaffolding Ends
+		//---------Generate Individual Steps Based Upon Above Scaffolding Starts
+		$.each(data.preparationStepsSec.steps , function(index, step){
+			renderIndividualStep(step);
+		});
+		//---------Generate Individual Steps Based Upon Above Scaffolding Ends
+	//---------Generate Preparation Steps Ends
+
 }
 
 function renderIndividualStep(step){
@@ -913,7 +918,7 @@ function getCRStepInstructionsTemplate(step){
 
 function getPrepearationStepsScaffoldingTemplate(){
 	return "<div id='preparation-steps-header-controls'>"
-			+"<button id='add-step-button' name='add-step-button' >{{ preparationStepsSec.stepsCommonUI.addStepButton.label }}</button>"			
+			+"<button onclick='addStepButtonEH(event)' id='add-step-button' name='add-step-button' >{{ preparationStepsSec.stepsCommonUI.addStepButton.label }}</button>"			
 		  +"</div>"
 		  +"<div id='cr-preparation-steps-list' name='cr-preparation-steps-list'>"
 				+"{{ #preparationStepsSec.steps }}"
@@ -1572,6 +1577,111 @@ function takeCRUsageInfoSnapShotEH(event){
 			delete item.selected;
 		}
 	});
+}
+
+function addStepButtonEH(event){
+	data.preparationStepsSec.steps.push(	{
+		"index"			: 	data.preparationStepsSec.steps.length + 1,
+		"ingredients"	:	[
+								{
+									"index"					: 1,
+									"ingrNameInputEN" 		: {
+																"value" : null
+															  },
+									"ingrNameInputFR" 		: {
+																"value" : null
+															  },
+									"amountMetricInput"		: {
+										"value" : null,
+										"amountUnitMetricCombo" : {
+																   "unitsList" :
+																		[
+																			{ 
+																				"name" : "each" 
+																			},
+																			{
+																			 "name" : "Weach",
+																			 "selected" : true
+																			}
+																		],
+																	"value"		: null
+																  }
+															  },
+									"amountImperialInput"	: {
+										"value"			       : null,
+										"amountUnitsImperialCombo": {
+																   "unitsList" : 
+																		[
+																			{
+																				"name" : "each"
+																			},
+																			{
+																			 "name" :"Weach",
+																			 "selected" : true
+																			}
+																		],
+																   "value"     : null
+																	}
+															  },
+									"moveUpButton"			: {},
+									"moveDownButton"		: {},
+									"deleteButton"			: {},
+								},
+								{
+									"index"					: 2,
+									"ingrNameInputEN" 		: {
+																"value" : null
+															  },
+									"ingrNameInputFR" 		: {
+																"value" : null
+															  },
+																																											"amountMetricInput"		: {
+										"value" : null,
+										"amountUnitMetricCombo" : {
+																   "unitsList" : 
+																		[
+																			{ 
+																			"name" : "each",
+																			"selected" :true
+																			},
+																			{
+																				"name" : "Weach"
+																			}
+																		],
+																	"value"		: null
+																  }
+															  },
+									"amountImperialInput"	: 
+									{
+									 "value"			       : null,
+									 "amountUnitsImperialCombo": {
+																   "unitsList" : 
+																		[
+																			{
+																				"name" : "each"
+																			},
+																			{
+																				"name" : "Weach"
+																			}
+																		],
+																   "value"     : null
+																  }
+									},
+									"moveUpButton"			: {},
+									"moveDownButton"		: {},
+									"deleteButton"			: {},
+								}
+							],
+		"instructions"	:	{
+								"enTextArea"	: {
+													"value"		: "Go Ahead!"
+												  },
+								"frTextArea"	: {
+													"value"		: null
+												  }
+							}
+	});
+	generatePreparationSteps();
 }
 //---------Event Handler Function Definitions Ends
 		</script>
