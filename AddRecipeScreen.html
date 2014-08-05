@@ -41,6 +41,7 @@
 			/*remove when merge in pmenu_master*/
 			
 			.hideContent{display : none;}
+			.showContent{display : block;}
 			
 			fieldset{border: 1px solid #0061AA;background-color: #e8edf7;margin: 5px 0 15px 10px !important;padding: 20px 10px 10px !important;position:relative;word-wrap: break-word;}
 			
@@ -85,6 +86,7 @@
 			var cr_usage_info_tepmplate = "cr-usage-info-template";
 			
 			var cr_preparation_steps_info_scaffolding_tepmplate = "cr-usage-info-scaffolding-template";			
+			var cr_individual_preparation_step_scaffolding_template = "cr-individual-preparation-step-scaffolding-template";
 			var cr_step_header_tepmplate = "cr_step_header_tepmplate";
 			var cr_step_ingredients_tepmplate = "cr_step_ingredients_tepmplate";
 			var cr_step_instructions_tepmplate = "cr_step_instructions_tepmplate";
@@ -319,6 +321,7 @@
 								
 								"steps" : [
 											{
+												"expanded"		: true,
 												"index"			: 	1,
 												"ingredients"	:	[
 																		{
@@ -420,6 +423,8 @@
 																    }
 											},
 											{
+											
+												"expanded"		: true,
 												"index"			:	2,
 												"ingredients"	:	[
 																		{
@@ -751,9 +756,35 @@ function sortPreparationStepsIndexField(){
 }
 
 function renderIndividualStep(step){
+
+	renderTemplate("#step-" + step.index, cr_individual_preparation_step_scaffolding_template, getIndividualPreparationStepScaffoldingTemplate(), step);
 	generateStepHeader(step);
-	generateStepIngredients(step);
+	generateStepIngredients(step);	
 	generateStepInstructions(step);
+}
+
+function getIndividualPreparationStepScaffoldingTemplate(){
+
+	//---------Collapsible Section Header Starts
+	return "<div id='step-{{ index }}-header' class='cr-preparation-step-header' onclick='expandOrCollapseEH(event,{{ index }})'></div>"
+	//---------Collapsible Section Header Ends
+	//---------Collapsible Section Content Starts
+	+"{{ ^expanded }}"
+		+"<div id='step-{{ index }}-content' class='cr-preparation-step-content'>"
+			//---------Step Ingredients Starts
+			+"<div id='step-{{ index }}-ingredients' class='step-DataSection'>"
+				+"<div class='step-ingredients-header'>"
+				+"</div>"
+				+"<div class='step-ingredients-list'>"
+				+"</div>"
+			+"</div>"
+			//---------Step Ingredients Ends
+			//---------Step Instructions Starts
+			+"<div id='step-{{ index }}-instructions'></div>"
+			//---------Step Instructions Ends
+		+"</div>"
+	+"{{ /expanded }}";
+	//---------Collapsible Section Content Ends
 }
 
 function generateStepHeader(step){
@@ -796,7 +827,7 @@ function generateStepInstructions(step){
 			    }
 	);	
 	//---------Step Instructions Generation Ends
-	//---------Text Area To rich Text Editor Conversion Starts
+	//---------Text Area To rich Text Editor Conversion Starts	
 	tinyMCE.init({
 		mode : "exact",
 		elements: "step-" + step.index + "-en-instructions, step-" + step.index + "-fr-instructions",
@@ -829,7 +860,7 @@ function renderTemplate(selector, tempName, templateDef, data){
 function getCRHeaderTemplate(){
 	return "<h3> {{ ui.stepLabel }}" + " " + "{{ step.index }} </h3>"		  
 		   //---------Delete Step Button Starts
-		  +"<a onclick='deleteStepButtonEH(event, {{ step.index }})' title='{{ ui.deleteStepButton.label }}'>"
+		  +"<a href='#' onmouseup='deleteStepButtonEH(event, {{ step.index }})' title='{{ ui.deleteStepButton.label }}'>"
 			+"{{ ui.deleteStepButton.label }}"
 		  +"</a>";
 		   //---------Delete Step Button Ends		   			
@@ -954,6 +985,14 @@ function getCRStepInstructionsTemplate(step){
 		  +"</div>";
 }
 
+/*
+	This function is used to generate a very basic scaffolding for the custom recipe preparation steps list & will be in this form:
+	<div>
+		<div id="step-1" class="cr-preparation-step"></div>
+		<div id="step-2" class="cr-preparation-step"></div>
+		...
+	</div>
+*/
 function getPrepearationStepsScaffoldingTemplate(){
 	return "<div id='preparation-steps-header-controls'>"
 			+"<button onclick='addStepButtonEH(event)' id='add-step-button' name='add-step-button' >{{ preparationStepsSec.stepsCommonUI.addStepButton.label }}</button>"			
@@ -961,27 +1000,7 @@ function getPrepearationStepsScaffoldingTemplate(){
 		  +"<div id='cr-preparation-steps-list' name='cr-preparation-steps-list'>"
 				+"{{ #preparationStepsSec.steps }}"
 					//---------Container For A Step Starts
-					+"<div id='step-{{ index }}' class='cr-preparation-step'>"
-						//+getStepContentTemplate()
-						//---------Collapsible Section Header Starts
-						+"<div id='step-{{ index }}-header' class='cr-preparation-step-header' onclick='expandOrCollapseEH({{ index }})'></div>"
-						//---------Collapsible Section Header Ends
-						//---------Collapsible Section Content Starts
-						+"<div id='step-{{ index }}-content' class='cr-preparation-step-content'>"
-							//---------Step Ingredients Starts
-							+"<div id='step-{{ index }}-ingredients' class='step-DataSection'>"
-								+"<div class='step-ingredients-header'>"
-								+"</div>"
-								+"<div class='step-ingredients-list'>"
-								+"</div>"
-							+"</div>"
-							//---------Step Ingredients Ends
-							//---------Step Instructions Starts
-							+"<div id='step-{{ index }}-instructions'></div>"
-							//---------Step Instructions Ends
-						+"</div>"
-						//---------Collapsible Section Content Ends
-					+"</div>"
+					+"<div id='step-{{ index }}' class='cr-preparation-step'></div>"
 					//---------Container For A Step Ends
 				+"{{ /preparationStepsSec.steps }}"
 		  +"</div>";
@@ -1476,12 +1495,16 @@ function getCRControlsTemplate(){
 //---------Template Function Definitions Ends
 
 //---------Event Handler Function Definitions Starts
-function expandOrCollapseEH(id){
+function expandOrCollapseEH(event, id){
+	data.preparationStepsSec.steps[(id - 1)].expanded = data.preparationStepsSec.steps[(id - 1)].expanded ? false : true;		
+	renderIndividualStep(data.preparationStepsSec.steps[(id - 1)]);	
+/*
 	if( $("#step-" + id + "-content").css("display") == "block" ){
 		$("#step-" + id + "-content").css("display", "none");
 	}else{
 		$("#step-" + id + "-content").css("display", "block");
 	}
+	*/
 }
 
 function langFilterCRBasicInfoEH(event, languageId){
@@ -1619,6 +1642,7 @@ function takeCRUsageInfoSnapShotEH(event){
 
 function addStepButtonEH(event){
 	data.preparationStepsSec.steps.push(	{
+		"expanded"		: true,
 		"index"			: 	data.preparationStepsSec.steps.length + 1,
 		"ingredients"	:	[
 								{
@@ -1722,10 +1746,12 @@ function addStepButtonEH(event){
 	generatePreparationSteps();
 }
 
-function deleteStepButtonEH(event, index){	
+function deleteStepButtonEH(event, index){
+	event.preventDefault();
 	data.preparationStepsSec.steps.splice(index-1, 1); 
 	sortPreparationStepsIndexField();
 	generatePreparationSteps();
+	return false;
 }
 //---------Event Handler Function Definitions Ends
 		</script>
