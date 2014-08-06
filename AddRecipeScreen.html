@@ -9,7 +9,7 @@
 			<link rel="stylesheet" type="text/css" href="EditWAAG.css">
 		<!-- EditWAAG Style Sheet -->
 		
-		<!-- Mustache -->
+		<!-- Mustache -->		
 			<script type="text/javascript" src="jquery.mustache.js"></script>
 			<script type="text/javascript" src="mustache.js"></script>
 		<!-- Mustache -->
@@ -325,20 +325,20 @@
 												"index"			: 	1,
 												"ingredients"	:	[
 																		{
-																			"index"					: 1,
+																			"index"					: 1.1,
 																			"ingrNameInputEN" 		: {
-																										"value" : null
+																										"value" : "Some Val"
 																									  },
 																			"ingrNameInputFR" 		: {
 																										"value" : null
 																									  },
 																		    "amountMetricInput"		: {
-																				"value" : null,
+																				"value" : "Some Val",
 																				"amountUnitMetricCombo" : {
 																										   "unitsList" :
 																												[
-																													{ 
-																														"name" : "each" 
+																													{
+																														"name" : "each"
 																													},
 																													{
 																													 "name" : "Weach",
@@ -369,7 +369,7 @@
 																			"deleteButton"			: {},
 																		},
 																		{
-																			"index"					: 2,
+																			"index"					: 1.2,
 																			"ingrNameInputEN" 		: {
 																										"value" : null
 																									  },
@@ -381,7 +381,7 @@
 																				"amountUnitMetricCombo" : {
 																										   "unitsList" : 
 																												[
-																													{ 
+																													{
 																													"name" : "each",
 																													"selected" :true
 																													},
@@ -428,7 +428,7 @@
 												"index"			:	2,
 												"ingredients"	:	[
 																		{
-																			"index"					: 1,
+																			"index"					: 2.1,
 																			"ingrNameInputEN" 		: {
 																										"value" : null
 																									  },
@@ -752,14 +752,24 @@ function generatePreparationSteps(){
 function sortPreparationStepsIndexField(){
 	$.each(data.preparationStepsSec.steps , function(index, step){
 			step.index = index + 1;
+			sortPreparationStepIngredientsIndexField(step);
 		});
+}
+
+/*
+	This function is used to sort the 'index' key in 'data.preparationStepsSec.steps.ingredients' list of JSON documents
+*/
+function sortPreparationStepIngredientsIndexField(step){
+	$.each(step.ingredients , function(index, ingredient){
+			ingredient.index = step.index + "." + (index + 1);
+	});
 }
 
 function renderIndividualStep(step){
 
 	renderTemplate("#step-" + step.index, cr_individual_preparation_step_scaffolding_template, getIndividualPreparationStepScaffoldingTemplate(), step);
 	generateStepHeader(step);
-	generateStepIngredients(step);	
+	generateStepIngredients(step);
 	generateStepInstructions(step);
 }
 
@@ -769,7 +779,7 @@ function getIndividualPreparationStepScaffoldingTemplate(){
 	return "<div id='step-{{ index }}-header' class='cr-preparation-step-header' onclick='expandOrCollapseEH(event,{{ index }})'></div>"
 	//---------Collapsible Section Header Ends
 	//---------Collapsible Section Content Starts
-	+"{{ ^expanded }}"
+	+"{{ #expanded }}"
 		+"<div id='step-{{ index }}-content' class='cr-preparation-step-content'>"
 			//---------Step Ingredients Starts
 			+"<div id='step-{{ index }}-ingredients' class='step-DataSection'>"
@@ -838,7 +848,14 @@ function generateStepInstructions(step){
 		theme_advanced_toolbar_location : "top",
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_statusbar_location : "",
-		plugins : 'inlinepopups'
+		plugins : 'inlinepopups',
+	    setup : function(ed) {
+	     ed.onChange.add(
+			 function(ed, l) {
+				  console.debug('Editor contents was modified. Contents: ' + l.content);
+			 }
+		);
+		}
 	});
 	//---------Text Area To rich Text Editor Conversion Ends
 }
@@ -847,11 +864,12 @@ function generateStepInstructions(step){
 	A Generic Function to Render Mustache Templates On This Screen
 */
 function renderTemplate(selector, tempName, templateDef, data){
+
 	$(selector).empty();
 	$.Mustache.add(tempName, templateDef);
 	$(selector).mustache(tempName, data);
 	//Clearing out the templates to save ??? :-)
-	$.Mustache.clear();
+	$.Mustache.clear();	
 }
 //---------General Function Definitions Ends
 
@@ -869,7 +887,7 @@ function getCRHeaderTemplate(){
 function getCRStepIngredientsTemplate(){
 	return "<div class=step-ingredients-header>"
 				+"{{ ui.ingeredientsLabel }}"
-				+"<button>{{ ui.addIngredientsLabel }}</button>"
+				+"<button onclick='addIngredientToAStepEH(event, {{ step.index }})'>{{ ui.addIngredientsLabel }}</button>"
 		  +"</div>"
 		  +"<div class='step-ingredients-list'>"
 			+"{{ #step.ingredients }}"
@@ -882,7 +900,7 @@ function getCRStepIngredientsTemplate(){
 										+"{{ /ui.ingrNameInputEN.mandatory }}"
 										+"{{ ui.ingrNameInputEN.label }}"
 									+"</label>"
-									+"<input name='ingredient-name-input-en' value='{{ step.ingrNameInputEN.value }}' />"
+									+"<input type='text' onchange='stepIngredientInputEH(event, {{ index}})' name='ingredient-name-input-en' value='{{ ingrNameInputEN.value }}' />"
 								+"{{ /showENLocaleFields }}"
 								//---------Ingredient Name Input En Ends
 								//---------Ingredient Name Input Fr Starts
@@ -893,7 +911,7 @@ function getCRStepIngredientsTemplate(){
 									+"{{ /ui.ingrNameInputFR.mandatory }}"
 									+"{{ ui.ingrNameInputFR.label }}"
 									+"</label>"
-									+"<input name='ingredient-name-input-fr' value='{{ step.ingrNameInputFR.value }}' />"
+									+"<input type='text' onchange='stepIngredientInputEH(event, {{ index}})' name='ingredient-name-input-fr' value='{{ ingrNameInputFR.value }}' />"
 								+"{{ /showFRLocaleFields }}"
 								//---------Ingredient Name Input Fr Ends							
 								//---------Ingredient Amount Input Imperial Starts							
@@ -903,7 +921,7 @@ function getCRStepIngredientsTemplate(){
 									+"{{ /ui.amountImperialInput.mandatory }}"
 									+"{{ ui.amountImperialInput.label }}"
 								+"</label>"
-								+"<input name='ingredient-name-input-imp' class='step-Input' value='{{ step.amountImperialInput.value }}' />"
+								+"<input type='text' onchange='stepIngredientInputEH(event, {{ index}})' name='ingredient-name-input-imp' class='step-Input' value='{{ amountImperialInput.value }}' />"
 								+"<select name='ingr-amount-units-combo-imp' class='step-Input'>"
 									+"{{ #amountImperialInput.amountUnitsImperialCombo.unitsList }}"
 										+"<option {{ #selected }} selected {{ /selected }} >"
@@ -919,7 +937,7 @@ function getCRStepIngredientsTemplate(){
 									+"{{ /ui.amountMetricInput.mandatory }}"
 									+"{{ ui.amountMetricInput.label }}"
 								+"</label>"
-								+"<input name='ingredient-amount-input-met' class='step-Input' value='{{ step.amountMetricInput.value }}' />"
+								+"<input type='text' onchange='stepIngredientInputEH(event, {{ index}})' name='ingredient-amount-input-met' class='step-Input' value='{{ amountMetricInput.value }}' />"
 								+"<select name='ingr-amount-units-combo-met' class='step-Input'>"
 									+"{{ #amountMetricInput.amountUnitMetricCombo.unitsList }}"
 										+"<option {{ #selected }} selected {{ /selected }}>"
@@ -941,7 +959,7 @@ function getCRStepIngredientsTemplate(){
 								+"</a>"
 								//---------Move Ingredient Down Button Ends
 								//---------Delete Ingredient Up Button Starts
-								+"<a href='#' "
+								+"<a href='#' onclick='deleteIngredientFromAStepEH(event, {{ index }})'"
 									+"title='{{ ui.deleteButton.title }}'>"
 									+"{{ ui.deleteButton.title }}"
 								+"</a>"
@@ -1646,7 +1664,7 @@ function addStepButtonEH(event){
 		"index"			: 	data.preparationStepsSec.steps.length + 1,
 		"ingredients"	:	[
 								{
-									"index"					: 1,
+									"index"					: 1.1,
 									"ingrNameInputEN" 		: {
 																"value" : null
 															  },
@@ -1690,7 +1708,7 @@ function addStepButtonEH(event){
 									"deleteButton"			: {},
 								},
 								{
-									"index"					: 2,
+									"index"					: 1.2,
 									"ingrNameInputEN" 		: {
 																"value" : null
 															  },
@@ -1752,6 +1770,66 @@ function deleteStepButtonEH(event, index){
 	sortPreparationStepsIndexField();
 	generatePreparationSteps();
 	return false;
+}
+
+function addIngredientToAStepEH(event, stepNumber){
+	data.preparationStepsSec.steps[(stepNumber - 1)].ingredients.push(
+	{
+		"index"					: stepNumber + "." + (data.preparationStepsSec.steps[(stepNumber - 1)].ingredients.length + 1),
+		"ingrNameInputEN" 		: {
+									"value" : null
+								  },
+		"ingrNameInputFR" 		: {
+									"value" : null
+								  },
+		"amountMetricInput"		: {
+			"value" : null,
+			"amountUnitMetricCombo" : {
+									   "unitsList" :
+											[
+												{
+													"name" : "each" 
+												},
+												{
+												 "name" : "Weach",
+												 "selected" : true
+												}
+											],
+										"value"		: null
+									  }
+								  },
+		"amountImperialInput"	: {
+			"value"			       : null,
+			"amountUnitsImperialCombo": {
+									   "unitsList" : 
+											[
+												{
+													"name" : "each"
+												},
+												{
+												 "name" :"Weach",
+												 "selected" : true
+												}
+											],
+									   "value"     : null
+										}
+								  },
+		"moveUpButton"			: {},
+		"moveDownButton"		: {},
+		"deleteButton"			: {},
+	}
+	);
+	generateStepIngredients(data.preparationStepsSec.steps[(stepNumber - 1)]);
+}
+
+function deleteIngredientFromAStepEH(event, ingredientNumber){
+	data.preparationStepsSec.steps[(ingredientNumber.toString().split(".")[0]) - 1].ingredients.splice((ingredientNumber.toString().split(".")[1])-1, 1);
+	sortPreparationStepIngredientsIndexField(data.preparationStepsSec.steps[(ingredientNumber.toString().split(".")[0]) - 1]);
+	generateStepIngredients(data.preparationStepsSec.steps[(ingredientNumber.toString().split(".")[0]) - 1]);
+}
+
+function stepIngredientInputEH(event, index){
+	console.log(index);
 }
 //---------Event Handler Function Definitions Ends
 		</script>
