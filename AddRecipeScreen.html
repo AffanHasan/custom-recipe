@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<!-- Jquery $ JQuery UI -->
@@ -900,7 +901,11 @@ function getCRStepIngredientsTemplate(){
 										+"{{ /ui.ingrNameInputEN.mandatory }}"
 										+"{{ ui.ingrNameInputEN.label }}"
 									+"</label>"
-									+"<input type='text' onchange='stepIngredientInputEH(event, {{ index}})' name='ingredient-name-input-en' value='{{ ingrNameInputEN.value }}' />"
+									+"<input type='text' onchange='stepIngredientInputEH(event, " 
+									+ 
+										"{ type : type, index : {{ index }}, value : value, key : \"ingrNameInputEN\"}"
+									+
+									")' name='ingredient-name-input-en' value='{{ ingrNameInputEN.value }}' />"
 								+"{{ /showENLocaleFields }}"
 								//---------Ingredient Name Input En Ends
 								//---------Ingredient Name Input Fr Starts
@@ -911,7 +916,11 @@ function getCRStepIngredientsTemplate(){
 									+"{{ /ui.ingrNameInputFR.mandatory }}"
 									+"{{ ui.ingrNameInputFR.label }}"
 									+"</label>"
-									+"<input type='text' onchange='stepIngredientInputEH(event, {{ index}})' name='ingredient-name-input-fr' value='{{ ingrNameInputFR.value }}' />"
+									+"<input type='text' onchange='stepIngredientInputEH(event, "
+									+
+									    "{ type : type, index : {{ index }}, value : value, key : \"ingrNameInputFR\"}"
+									+
+									")' name='ingredient-name-input-fr' value='{{ ingrNameInputFR.value }}' />"
 								+"{{ /showFRLocaleFields }}"
 								//---------Ingredient Name Input Fr Ends							
 								//---------Ingredient Amount Input Imperial Starts							
@@ -921,8 +930,16 @@ function getCRStepIngredientsTemplate(){
 									+"{{ /ui.amountImperialInput.mandatory }}"
 									+"{{ ui.amountImperialInput.label }}"
 								+"</label>"
-								+"<input type='text' onchange='stepIngredientInputEH(event, {{ index}})' name='ingredient-name-input-imp' class='step-Input' value='{{ amountImperialInput.value }}' />"
-								+"<select name='ingr-amount-units-combo-imp' class='step-Input'>"
+								+"<input type='text' onchange='stepIngredientInputEH(event, "
+								+
+									"{ type : type, index : {{ index }}, value : value, key : \"amountImperialInput\"}"
+								+
+								")' name='ingredient-name-input-imp' class='step-Input' value='{{ amountImperialInput.value }}' />"
+								+"<select name='ingr-amount-units-combo-imp' class='step-Input'"
+								+
+									"onchange='stepIngredientInputEH(event, {  type : type, index : {{ index }}, value : value, key : \"amountImperialInput.amountUnitsImperialCombo\"})'"
+								+
+								">"
 									+"{{ #amountImperialInput.amountUnitsImperialCombo.unitsList }}"
 										+"<option {{ #selected }} selected {{ /selected }} >"
 											+"{{ name }}"
@@ -937,8 +954,15 @@ function getCRStepIngredientsTemplate(){
 									+"{{ /ui.amountMetricInput.mandatory }}"
 									+"{{ ui.amountMetricInput.label }}"
 								+"</label>"
-								+"<input type='text' onchange='stepIngredientInputEH(event, {{ index}})' name='ingredient-amount-input-met' class='step-Input' value='{{ amountMetricInput.value }}' />"
-								+"<select name='ingr-amount-units-combo-met' class='step-Input'>"
+								+"<input type='text' onchange='stepIngredientInputEH(event, "
+								+
+									"{ type : type,  index : {{ index }}, value : value, key : \"amountMetricInput\"}"
+								+
+								")' name='ingredient-amount-input-met' class='step-Input' value='{{ amountMetricInput.value }}' />"
+								+"<select name='ingr-amount-units-combo-met' class='step-Input'"
+								+
+									"onchange='stepIngredientInputEH(event, { type : type, index : {{ index }}, value : value, key : \"amountMetricInput.amountUnitMetricCombo\"})'"
+								+">"
 									+"{{ #amountMetricInput.amountUnitMetricCombo.unitsList }}"
 										+"<option {{ #selected }} selected {{ /selected }}>"
 											+"{{ name }}"
@@ -948,13 +972,13 @@ function getCRStepIngredientsTemplate(){
 								//---------Ingredient Amount Input Metric Ends
 								//---------Move Ingredient Up Button Starts
 								+"<a href='#'"
-									+" title='{{ ui.moveUpButton.title }}'>"
+									+" title='{{ ui.moveUpButton.title }}' onclick='moveIngredientUsingButtonEH(event, 'up', {{ index }})'>"
 									+"{{ ui.moveUpButton.title }}"
 								+"</a>"
 								//---------Move Ingredient Up Button Ends
 								//---------Move Ingredient Down Button Starts
 								+"<a href='#' "
-									+"title='{{ ui.moveDownButton.title }}'>"
+									+"title='{{ ui.moveDownButton.title }}' onclick='moveIngredientUsingButtonEH(event, 'down', {{ index }})'>"
 									+"{{ ui.moveDownButton.title }}"
 								+"</a>"
 								//---------Move Ingredient Down Button Ends
@@ -1664,7 +1688,7 @@ function addStepButtonEH(event){
 		"index"			: 	data.preparationStepsSec.steps.length + 1,
 		"ingredients"	:	[
 								{
-									"index"					: 1.1,
+									"index"					: (data.preparationStepsSec.steps.length + 1) + "." + 1,
 									"ingrNameInputEN" 		: {
 																"value" : null
 															  },
@@ -1708,7 +1732,7 @@ function addStepButtonEH(event){
 									"deleteButton"			: {},
 								},
 								{
-									"index"					: 1.2,
+									"index"					: (data.preparationStepsSec.steps.length + 1) + "." + 2,
 									"ingrNameInputEN" 		: {
 																"value" : null
 															  },
@@ -1828,8 +1852,36 @@ function deleteIngredientFromAStepEH(event, ingredientNumber){
 	generateStepIngredients(data.preparationStepsSec.steps[(ingredientNumber.toString().split(".")[0]) - 1]);
 }
 
-function stepIngredientInputEH(event, index){
-	console.log(index);
+function stepIngredientInputEH(event, detail){
+	switch(detail.type){
+		case 'text':
+			data.preparationStepsSec.steps[(detail.index.toString().split(".")[0]) - 1]
+			.ingredients[(detail.index.toString().split(".")[1]) - 1][detail.key].value = detail.value;
+		break;
+		case 'select-one':
+			var combo = 	//Step
+							data.preparationStepsSec.steps[(detail.index.toString().split(".")[0]) - 1]
+							//Respected ingredient
+							.ingredients[(detail.index.toString().split(".")[1]) - 1]
+							//Respected key in the ingredient
+							[(detail.key).split(".")[0]][(detail.key).split(".")[1]];
+			combo.value = detail.value;
+			$.each(combo.unitsList, function(index, item){
+				if( item.name == detail.value){
+					item.selected = true;
+				}else{
+					delete item.selected;
+				}
+			});
+			
+		break;
+	}
+}
+
+function moveIngredientUsingButtonEH(event, direction, ingredientIndex){
+/*
+	data.preparationStepsSec.steps[(ingredientIndex.toString().split(".")[0]) - 1].ingredients[(ingredientIndex.toString().split(".")[1]) - 1];
+*/	
 }
 //---------Event Handler Function Definitions Ends
 		</script>
