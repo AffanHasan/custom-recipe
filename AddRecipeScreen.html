@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="UTF-8">
+		<title>Title of the document</title>
 		<!-- Jquery $ JQuery UI -->
 			<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
 			<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/jquery-ui.min.js"></script>
@@ -96,7 +98,7 @@
 			var cr_admin_notes_tepmplate = "cr-admin-notes-template";
 			var cr_controls_tepmplate = "cr-controls-template";
 			var data = 
-{	
+{
 	"showAllLocaleFields" 	: true,
 	
 	"showENLocaleFields"  : true,
@@ -723,7 +725,7 @@ function generatePreparationSteps(){
 						 },
 			"stop" 	   	: function( event, ui ){
 							stop = ui.item.index();
-							console.log(stop);							
+							console.log(stop);
 							if(start == stop){//Since element is not dragged hence returning
 								generatePreparationSteps();
 								return false;
@@ -833,15 +835,15 @@ function generateStepInstructions(step){
 				  "showAllLocaleFields" : data.showAllLocaleFields,
 				  "showENLocaleFields"  : data.showENLocaleFields,	
 			      "showFRLocaleFields"  : data.showFRLocaleFields,
-				  "ui" 	 : data.preparationStepsSec.stepsCommonUI, 
+				  "ui" 	 : data.preparationStepsSec.stepsCommonUI,
 				  "step" : step
 			    }
-	);	
+	);
 	//---------Step Instructions Generation Ends
 	//---------Text Area To rich Text Editor Conversion Starts	
 	tinyMCE.init({
 		mode : "exact",
-		elements: "step-" + step.index + "-en-instructions, step-" + step.index + "-fr-instructions",
+		elements: "step-" + step.index + "-instructions_en, step-" + step.index + "-instructions_fr",
 		theme : "advanced",
 		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect",
 		theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,image,cleanup,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
@@ -850,13 +852,14 @@ function generateStepInstructions(step){
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_statusbar_location : "",
 		plugins : 'inlinepopups',
-	    setup : function(ed) {
-	     ed.onChange.add(
-			 function(ed, l) {
-				  console.debug('Editor contents was modified. Contents: ' + l.content);
-			 }
-		);
-		}
+	    setup : function(ed){
+			 ed.onChange.add(
+				 function(ed, l) {
+					  console.log("Called");
+					  stepIngredientInputEH(null, { "id" : ed.id, "index" : step.index, "type" : "instructions", "value" : l.content });
+				 }
+			);
+		}		
 	});
 	//---------Text Area To rich Text Editor Conversion Ends
 }
@@ -937,7 +940,11 @@ function getCRStepIngredientsTemplate(){
 								")' name='ingredient-name-input-imp' class='step-Input' value='{{ amountImperialInput.value }}' />"
 								+"<select name='ingr-amount-units-combo-imp' class='step-Input'"
 								+
-									"onchange='stepIngredientInputEH(event, {  type : type, index : {{ index }}, value : value, key : \"amountImperialInput.amountUnitsImperialCombo\"})'"
+									"onchange='stepIngredientInputEH(event, "
+									+
+						"{  type : type, index : {{ index }}, value : value, key : \"amountImperialInput.amountUnitsImperialCombo\"}"
+									+
+									")'"
 								+
 								">"
 									+"{{ #amountImperialInput.amountUnitsImperialCombo.unitsList }}"
@@ -959,6 +966,7 @@ function getCRStepIngredientsTemplate(){
 									"{ type : type,  index : {{ index }}, value : value, key : \"amountMetricInput\"}"
 								+
 								")' name='ingredient-amount-input-met' class='step-Input' value='{{ amountMetricInput.value }}' />"
+								
 								+"<select name='ingr-amount-units-combo-met' class='step-Input'"
 								+
 									"onchange='stepIngredientInputEH(event, { type : type, index : {{ index }}, value : value, key : \"amountMetricInput.amountUnitMetricCombo\"})'"
@@ -969,16 +977,17 @@ function getCRStepIngredientsTemplate(){
 										+"</option>"
 									+"{{ /amountMetricInput.amountUnitMetricCombo.unitsList }}"
 								+"</select>"
+								
 								//---------Ingredient Amount Input Metric Ends
 								//---------Move Ingredient Up Button Starts
 								+"<a href='#'"
-									+" title='{{ ui.moveUpButton.title }}' onclick='moveIngredientUsingButtonEH(event, 'up', {{ index }})'>"
+									+" title='{{ ui.moveUpButton.title }}' onclick='moveIngredientUsingButtonEH(event, \"up\", {{ index }})'>"
 									+"{{ ui.moveUpButton.title }}"
 								+"</a>"
 								//---------Move Ingredient Up Button Ends
 								//---------Move Ingredient Down Button Starts
 								+"<a href='#' "
-									+"title='{{ ui.moveDownButton.title }}' onclick='moveIngredientUsingButtonEH(event, 'down', {{ index }})'>"
+									+"title='{{ ui.moveDownButton.title }}' onclick='moveIngredientUsingButtonEH(event, \"down\", {{ index }})'>"
 									+"{{ ui.moveDownButton.title }}"
 								+"</a>"
 								//---------Move Ingredient Down Button Ends
@@ -1006,7 +1015,7 @@ function getCRStepInstructionsTemplate(step){
 							+"{{ ui.instructions.enTextArea.label }}"
 						+"</label>"
 					+"</div>"
-					+"<textarea id='step-{{ step.index }}-en-instructions' >"
+					+"<textarea id='step-{{ step.index }}-instructions_en' >"
 						+"{{ step.instructions.enTextArea.value }}"
 					+"</textarea>"
 				+"</div>"
@@ -1019,7 +1028,7 @@ function getCRStepInstructionsTemplate(step){
 					+"<label for='step-{{ step.index }}-fr-instructions'>"
 						+"{{ ui.instructions.frTextArea.label }}"
 					+"</label>"
-					+"<textarea id='step-{{ step.index }}-fr-instructions'>"
+					+"<textarea id='step-{{ step.index }}-instructions_fr' >"
 						+"{{ step.instructions.frTextArea.value }}"
 					+"</textarea>"
 				+"</div>"
@@ -1789,11 +1798,11 @@ function addStepButtonEH(event){
 }
 
 function deleteStepButtonEH(event, index){
-	event.preventDefault();
+	//event.preventDefault();
 	data.preparationStepsSec.steps.splice(index-1, 1); 
 	sortPreparationStepsIndexField();
 	generatePreparationSteps();
-	return false;
+	//return false;
 }
 
 function addIngredientToAStepEH(event, stepNumber){
@@ -1873,15 +1882,34 @@ function stepIngredientInputEH(event, detail){
 					delete item.selected;
 				}
 			});
-			
+		break;
+		case 'instructions':			
+			if(detail.id.split("_")[1] == "en"){
+				console.log("yes");
+				data.preparationStepsSec.steps[ detail.index - 1 ].instructions.enTextArea.value = detail.value;
+				console.log(data.preparationStepsSec.steps[ detail.index - 1 ].instructions.enTextArea.value);
+			}else if(detail.id.split("_")[1] == "fr"){
+				data.preparationStepsSec.steps[ detail.index - 1 ].instructions.frTextArea.value = detail.value;
+			}			
 		break;
 	}
 }
 
 function moveIngredientUsingButtonEH(event, direction, ingredientIndex){
-/*
-	data.preparationStepsSec.steps[(ingredientIndex.toString().split(".")[0]) - 1].ingredients[(ingredientIndex.toString().split(".")[1]) - 1];
-*/	
+	console.log(direction);
+	var ingredient =
+	data.preparationStepsSec.steps[ ingredientIndex.toString().split(".")[0] - 1 ].ingredients[ ingredientIndex.toString().split(".")[1] - 1 ];
+//	Deleting the ingredient
+	data.preparationStepsSec.steps[ ingredientIndex.toString().split(".")[0] - 1 ].ingredients.splice( ingredientIndex.toString().split(".")[1] - 1 , 1 );
+	if(direction == "up"){		
+		data.preparationStepsSec.steps[ ingredientIndex.toString().split(".")[0] - 1 ].ingredients.splice( ingredientIndex.toString().split(".")[1] - 2, 0, ingredient );
+		sortPreparationStepIngredientsIndexField( data.preparationStepsSec.steps[ ingredientIndex.toString().split(".")[0] - 1 ] );
+		generateStepIngredients( data.preparationStepsSec.steps[ ingredientIndex.toString().split(".")[0] - 1 ] );
+	}else{
+		data.preparationStepsSec.steps[ ingredientIndex.toString().split(".")[0] - 1 ].ingredients.splice( ingredientIndex.toString().split(".")[1], 0, ingredient );
+		sortPreparationStepIngredientsIndexField( data.preparationStepsSec.steps[ ingredientIndex.toString().split(".")[0] - 1 ] );
+		generateStepIngredients( data.preparationStepsSec.steps[ ingredientIndex.toString().split(".")[0] - 1 ] );
+	}
 }
 //---------Event Handler Function Definitions Ends
 		</script>
