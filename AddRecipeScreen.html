@@ -765,6 +765,25 @@ function sortPreparationStepsIndexField(){
 function sortPreparationStepIngredientsIndexField(step){
 	$.each(step.ingredients , function(index, ingredient){
 			ingredient.index = step.index + "." + (index + 1);
+			ingredient.position = {};
+			//It means that it is the first ingredient
+			if( index == 0 ){
+				ingredient.position.firstOne = true;
+				ingredient.position.onlyOne = false;
+				ingredient.position.lastOne = false;
+			}
+			//It means that it is the last ingredient
+			if( index == step.ingredients.length - 1 ){
+				ingredient.position.firstOne = false;
+				ingredient.position.onlyOne = false;
+				ingredient.position.lastOne = true;
+			}
+			//It means that it is the only ingredient in the list
+			if( step.ingredients.length == 1 ){
+				ingredient.position.firstOne = false;
+				ingredient.position.onlyOne = true;
+				ingredient.position.lastOne = false;
+			}
 	});
 }
 
@@ -980,16 +999,24 @@ function getCRStepIngredientsTemplate(){
 								
 								//---------Ingredient Amount Input Metric Ends
 								//---------Move Ingredient Up Button Starts
-								+"<a href='#'"
-									+" title='{{ ui.moveUpButton.title }}' onclick='moveIngredientUsingButtonEH(event, \"up\", {{ index }})'>"
-									+"{{ ui.moveUpButton.title }}"
-								+"</a>"
+								+"{{ ^position.firstOne }}"
+									+"{{ ^position.onlyOne }}"
+										+"<a href='#'"
+											+" title='{{ ui.moveUpButton.title }}' onclick='moveIngredientUsingButtonEH(event, \"up\", {{ index }})'>"
+											+"{{ ui.moveUpButton.title }}"
+										+"</a>"
+									+"{{ /position.onlyOne }}"
+								+"{{ /position.firstOne }}"
 								//---------Move Ingredient Up Button Ends
 								//---------Move Ingredient Down Button Starts
-								+"<a href='#' "
-									+"title='{{ ui.moveDownButton.title }}' onclick='moveIngredientUsingButtonEH(event, \"down\", {{ index }})'>"
-									+"{{ ui.moveDownButton.title }}"
-								+"</a>"
+								+"{{ ^position.lastOne }}"
+									+"{{ ^position.onlyOne }}"
+										+"<a href='#' "
+											+"title='{{ ui.moveDownButton.title }}' onclick='moveIngredientUsingButtonEH(event, \"down\", {{ index }})'>"
+											+"{{ ui.moveDownButton.title }}"
+										+"</a>"
+									+"{{ /position.onlyOne }}"
+								+"{{ /position.lastOne }}"
 								//---------Move Ingredient Down Button Ends
 								//---------Delete Ingredient Up Button Starts
 								+"<a href='#' onclick='deleteIngredientFromAStepEH(event, {{ index }})'"
