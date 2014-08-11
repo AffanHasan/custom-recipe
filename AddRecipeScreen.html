@@ -848,7 +848,7 @@ function generateStepIngredients(step){
 	var start, stop;
 	$("#ingredients-list-step_" + step.index).sortable(
 		{
-			//"handle"	: ".cr-preparation-step-header",
+			"handle"	: ".ingredient-drag-handle",
 			"axis"		: "y",
 			"start"	    : function(event, ui){
 							start = ui.item.index();							
@@ -947,6 +947,7 @@ function getCRStepIngredientsTemplate(){
 		  +"<div id='ingredients-list-step_{{ step.index }}' class='step-ingredients-list'>"
 			+"{{ #step.ingredients }}"
 				+"<div name='ingredient-item_{{ index }}' class='ingredient-item'>"
+								+"<span class='ingredient-drag-handle'>▒</span>"
 								//---------Ingredient Name Input En Starts
 								+"{{ #showENLocaleFields }}"								
 									+"<label for='ingredient-name-input-en'>"
