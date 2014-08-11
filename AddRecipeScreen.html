@@ -1347,7 +1347,7 @@ function getCustomRecipeUsageInfoTemplate(){
 }
 
 function getNutritionalsInfoTemplate(){
-	return   "<div class='nutritional-info-header'>{{ nutritionalInfoSec.headerLabel }}</div>"
+	return "<div class='nutritional-info-header'>{{ nutritionalInfoSec.headerLabel }}</div>"
 			+"<div class='nutritionals-container'>"
 				//---------Calories Starts
 				+"<span class='nutriotional-item'>"
@@ -1355,10 +1355,15 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.calories.mandatory }}"
 					+"<label for='cr-nutr-calories'>{{ nutritionalInfoSec.calories.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-calories' name='cr-nutr-calories'>{{ nutritionalInfoSec.calories.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-calories' name='cr-nutr-calories'"						
+						+"value='{{ nutritionalInfoSec.calories.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"calories\", value : value })'"
+					+">"
+					+"</input>"
 					+"<label for='cr-nutr-calories'>{{ nutritionalInfoSec.calories.input.unitLabel }}</label>"
-					+"<input type='checkbox' id='cr-nutr-cal-acc' name='cr-nutr-cal-acc' "
+					+"<input type='checkbox' id='cr-nutr-cal-acc' name='cr-nutr-cal-acc' "						
 						+"{{ #nutritionalInfoSec.calories.accuracy.checked }} checked {{ /nutritionalInfoSec.calories.accuracy.checked }}"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"calories_accuracy\", value : checked })'"
 					+"/>"
 					+"<label for='cr-nutr-cal-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
 				+"</span>"
@@ -1369,9 +1374,14 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.protein.mandatory }}"
 					+"<label for='cr-nutr-prot'>{{ nutritionalInfoSec.protein.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-prot' name='cr-nutr-prot'>{{ nutritionalInfoSec.protein.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-prot' name='cr-nutr-prot'"
+						+"value='{{ nutritionalInfoSec.protein.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"protein\", value : value })'"
+					+">"
+					+"</input>"
 					+"<label for='cr-nutr-prot'>{{ nutritionalInfoSec.protein.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-prot-acc' name='cr-nutr-prot-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"protein_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.protein.accuracy.checked }} checked {{ /nutritionalInfoSec.protein.accuracy.checked }}"
 					+"/>"					
 					+"<label for='cr-nutr-prot-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1383,9 +1393,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.fat.mandatory }}"
 					+"<label for='cr-nutr-fat'>{{ nutritionalInfoSec.fat.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-fat' name='cr-nutr-fat'>{{ nutritionalInfoSec.fat.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-fat' name='cr-nutr-fat'"
+						+"value='{{ nutritionalInfoSec.fat.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"fat\", value : value })'"
+					+"></input>"
 					+"<label for='cr-nutr-fat'>{{ nutritionalInfoSec.fat.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-fat-acc' name='cr-nutr-fat-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"fat_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.fat.accuracy.checked }} checked {{ /nutritionalInfoSec.fat.accuracy.checked }}"
 					+"/>"
 					+"<label for='cr-nutr-fat-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1400,9 +1414,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.cholestrol.mandatory }}"
 					+"<label for='cr-nutr-cholestrol'>{{ nutritionalInfoSec.cholestrol.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-cholestrol' name='cr-nutr-cholestrol'>{{ nutritionalInfoSec.cholestrol.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-cholestrol' name='cr-nutr-cholestrol'"
+						+"value='{{ nutritionalInfoSec.cholestrol.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"cholestrol\", value : value } )'"+
+					"></input>"					
 					+"<label for='cr-nutr-cholestrol'>{{ nutritionalInfoSec.cholestrol.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-chol-acc' name='cr-nutr-chol-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"cholestrol_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.cholestrol.accuracy.checked }} checked {{ /nutritionalInfoSec.cholestrol.accuracy.checked }}"
 					+"/>"
 					+"<label for='cr-nutr-chol-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1414,9 +1432,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.carbohydrate.mandatory }}"
 					+"<label for='cr-nutr-carbo'>{{ nutritionalInfoSec.carbohydrate.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-carbo' name='cr-nutr-carbo'>{{ nutritionalInfoSec.carbohydrate.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-carbo' name='cr-nutr-carbo'"
+						+"value='{{ nutritionalInfoSec.carbohydrate.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"carbohydrate\", value : value })'"+
+					"></input>"
 					+"<label for='cr-nutr-carbo'>{{ nutritionalInfoSec.carbohydrate.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-carbo-acc' name='cr-nutr-carbo-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"carbohydrate_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.carbohydrate.accuracy.checked }} checked {{ /nutritionalInfoSec.carbohydrate.accuracy.checked }}"
 					+"/>"					
 					+"<label for='cr-nutr-carbo-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1428,9 +1450,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.dietaryFibre.mandatory }}"
 					+"<label for='cr-nutr-d-fibre'>{{ nutritionalInfoSec.dietaryFibre.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-d-fibre' name='cr-nutr-d-fibre'>{{ nutritionalInfoSec.dietaryFibre.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-d-fibre' name='cr-nutr-d-fibre'"
+						+"value='{{ nutritionalInfoSec.dietaryFibre.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"dietaryFibre\", value : value })'"+
+					"></input>"
 					+"<label for='cr-nutr-d-fibre'>{{ nutritionalInfoSec.dietaryFibre.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-d-fibre-acc' name='cr-nutr-d-fibre-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"dietaryFibre_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.dietaryFibre.accuracy.checked }} checked {{ /nutritionalInfoSec.dietaryFibre.accuracy.checked }}"
 					+"/>"
 					+"<label for='cr-nutr-d-fibre-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1445,9 +1471,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /.nutritionalInfoSec.calcium.mandatory }}"
 					+"<label for='cr-nutr-calc'>{{ nutritionalInfoSec.calcium.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-calc' name='cr-nutr-calc'>{{ .nutritionalInfoSec.calcium.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-calc' name='cr-nutr-calc'"
+						+"value='{{ nutritionalInfoSec.calcium.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"calcium\", value : value })'"+
+					"></input>"
 					+"<label for='cr-nutr-calc'>{{ nutritionalInfoSec.calcium.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-cal-acc' name='cr-nutr-cal-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"calcium_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.calcium.accuracy.checked }} checked {{ /nutritionalInfoSec.calcium.accuracy.checked }}"
 					+"/>"
 					+"<label for='cr-nutr-cal-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1459,9 +1489,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.iron.mandatory }}"
 					+"<label for='cr-nutr-iron'>{{ nutritionalInfoSec.iron.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-iron' name='cr-nutr-iron'>{{ nutritionalInfoSec.iron.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-iron' name='cr-nutr-iron'"
+						+"value='{{ nutritionalInfoSec.iron.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"iron\", value : value })'"+
+					"></input>"
 					+"<label for='cr-nutr-iron'>{{ nutritionalInfoSec.iron.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-iron-acc' name='cr-nutr-iron-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"iron_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.iron.accuracy.checked }} checked {{ /nutritionalInfoSec.iron.accuracy.checked }}"
 					+"/>"					
 					+"<label for='cr-nutr-iron-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1473,9 +1507,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.vitaminARAE.mandatory }}"
 					+"<label for='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARAE.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-v-a-rae' name='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARAE.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-v-a-rae' name='cr-nutr-v-a-rae'"
+						+"value='{{ nutritionalInfoSec.vitaminARAE.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"vitaminARAE\", value : value })'"+
+					"></input>"
 					+"<label for='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARAE.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-v-a-rae-acc' name='cr-nutr-v-a-rae-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"vitaminARAE_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.vitaminARAE.accuracy.checked }} checked {{ /nutritionalInfoSec.vitaminARAE.accuracy.checked }}"
 					+"/>"
 					+"<label for='cr-nutr-v-a-rae-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1490,9 +1528,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.saturatedFat.mandatory }}"
 					+"<label for='cr-nutr-s-fat'>{{ nutritionalInfoSec.saturatedFat.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-s-fat' name='cr-nutr-s-fat'>{{ nutritionalInfoSec.saturatedFat.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-s-fat' name='cr-nutr-s-fat'"
+						+"value='{{ nutritionalInfoSec.saturatedFat.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"saturatedFat\", value : value })'"+
+					"></input>"
 					+"<label for='cr-nutr-s-fat'>{{ nutritionalInfoSec.saturatedFat.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-s-fat-acc' name='cr-nutr-s-fat-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"saturatedFat_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.saturatedFat.accuracy.checked }} checked {{ /nutritionalInfoSec.saturatedFat.accuracy.checked }}"
 					+"/>"
 					+"<label for='cr-nutr-s-fat-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1504,9 +1546,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.fattyAcids.mandatory }}"
 					+"<label for='cr-nutr-f-acids'>{{ nutritionalInfoSec.fattyAcids.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-f-acids' name='cr-nutr-f-acids'>{{ nutritionalInfoSec.fattyAcids.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-f-acids' name='cr-nutr-f-acids'"
+						+"value='{{ nutritionalInfoSec.fattyAcids.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"fattyAcids\", value : value })'"+
+					"></input>"
 					+"<label for='cr-nutr-f-acids'>{{ nutritionalInfoSec.fattyAcids.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-f-acids-acc' name='cr-nutr-f-acids-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"fattyAcids_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.fattyAcids.accuracy.checked }} checked {{ /nutritionalInfoSec.fattyAcids.accuracy.checked }}"
 					+"/>"					
 					+"<label for='cr-nutr-f-acids-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1518,9 +1564,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.vitaminC.mandatory }}"
 					+"<label for='cr-nutr-vitamin-c'>{{ nutritionalInfoSec.vitaminC.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-vitamin-c' name='cr-nutr-vitamin-c'>{{ nutritionalInfoSec.vitaminC.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-vitamin-c' name='cr-nutr-vitamin-c'"
+						+"value='{{ nutritionalInfoSec.vitaminC.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"vitaminC\", value : value })'"+
+					"></input>"
 					+"<label for='cr-nutr-vitamin-c'>{{ nutritionalInfoSec.vitaminC.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-vitamin-c-acc' name='cr-nutr-vitamin-c-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"vitaminC_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.vitaminC.accuracy.checked }} checked {{ /nutritionalInfoSec.vitaminC.accuracy.checked }}"
 					+"/>"
 					+"<label for='cr-nutr-vitamin-c-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1535,9 +1585,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.sugars.mandatory }}"
 					+"<label for='cr-nutr-sugars'>{{ nutritionalInfoSec.sugars.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-sugars' name='cr-nutr-sugars'>{{ nutritionalInfoSec.sugars.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-sugars' name='cr-nutr-sugars'"
+						+"value='{{ nutritionalInfoSec.sugars.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"sugars\", value : value })'"+
+					"></input>"
 					+"<label for='cr-nutr-sugars'>{{ nutritionalInfoSec.sugars.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-sugars-acc' name='cr-nutr-sugars-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"sugars_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.sugars.accuracy.checked }} checked {{ /nutritionalInfoSec.sugars.accuracy.checked }}"
 					+"/>"
 					+"<label for='cr-nutr-sugars-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1549,9 +1603,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.sodium.mandatory }}"
 					+"<label for='cr-nutr-sodium'>{{ nutritionalInfoSec.sodium.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-sodium' name='cr-nutr-sodium'>{{ nutritionalInfoSec.sodium.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-sodium' name='cr-nutr-sodium'"
+						+"value='{{ nutritionalInfoSec.sodium.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"sodium\", value : value })'"+
+					"></input>"
 					+"<label for='cr-nutr-sodium'>{{ nutritionalInfoSec.sodium.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-sodium-acc' name='cr-nutr-sodium-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"sodium_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.sodium.accuracy.checked }} checked {{ /nutritionalInfoSec.sodium.accuracy.checked }}"
 					+"/>"					
 					+"<label for='cr-nutr-sodium-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1563,9 +1621,13 @@ function getNutritionalsInfoTemplate(){
 						+"<span class='crMandatoryInput'>*</span>"
 					+"{{ /nutritionalInfoSec.vitaminARE.mandatory }}"
 					+"<label for='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARE.input.label }}</label>"
-					+"<input type='text' id='cr-nutr-v-a-rae' name='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARE.input.value }}</input>"
+					+"<input type='text' id='cr-nutr-v-a-rae' name='cr-nutr-v-a-rae'"
+						+"value='{{ nutritionalInfoSec.vitaminARE.input.value }}'"
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"vitaminARE\", value : value })'"+
+					"></input>"
 					+"<label for='cr-nutr-v-a-rae'>{{ nutritionalInfoSec.vitaminARE.input.unitLabel }}</label>"
 					+"<input type='checkbox' id='cr-nutr-v-a-rae-acc' name='cr-nutr-v-a-rae-acc' "
+						+"onchange='nutritionalInfoInputEH(event, { type : type, key : \"vitaminARE_accuracy\", value : checked })'"
 						+"{{ #nutritionalInfoSec.vitaminARE.accuracy.checked }} checked {{ /nutritionalInfoSec.vitaminARE.accuracy.checked }}"
 					+"/>"
 					+"<label for='cr-nutr-v-a-rae-acc'>{{ nutritionalInfoSec.commonUI.accuracyLabel }}</label>"
@@ -1912,6 +1974,7 @@ function addIngredientToAStepEH(event, stepNumber){
 		"deleteButton"			: {},
 	}
 	);
+	sortPreparationStepIngredientsIndexField(data.preparationStepsSec.steps[(stepNumber - 1)]);
 	generateStepIngredients(data.preparationStepsSec.steps[(stepNumber - 1)]);
 }
 
@@ -1970,6 +2033,18 @@ function moveIngredientUsingButtonEH(event, direction, ingredientIndex){
 		sortPreparationStepIngredientsIndexField( data.preparationStepsSec.steps[ ingredientIndex.toString().split(".")[0] - 1 ] );
 		generateStepIngredients( data.preparationStepsSec.steps[ ingredientIndex.toString().split(".")[0] - 1 ] );
 	}
+}
+
+function nutritionalInfoInputEH(event, detail){		
+	switch(detail.type){
+		case "text":
+			data.nutritionalInfoSec[detail.key].input.value = detail.value;
+		break;
+		case "checkbox":
+			console.log(detail.value);
+			data.nutritionalInfoSec[ detail.key.split("_")[0] ][ detail.key.split("_")[1] ].checked = detail.value;
+		break;
+	}	
 }
 //---------Event Handler Function Definitions Ends
 		</script>
