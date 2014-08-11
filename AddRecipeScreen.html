@@ -712,7 +712,8 @@ function generatePreparationSteps(){
 			renderIndividualStep(step);
 		});
 		//---------Generate Individual Steps Based Upon Above Scaffolding Ends
-	//---------Generate Preparation Steps Ends	
+	//---------Generate Preparation Steps Ends
+	
 	//---------Making the steps sortable
 	var start, stop;
 	$("#cr-preparation-steps-list").sortable(
@@ -836,13 +837,44 @@ function generateStepIngredients(step){
 				cr_step_ingredients_tepmplate, getCRStepIngredientsTemplate(),
 				{
 				  "showAllLocaleFields" : data.showAllLocaleFields,
-				  "showENLocaleFields"  : data.showENLocaleFields,	
+				  "showENLocaleFields"  : data.showENLocaleFields,
 			      "showFRLocaleFields"  : data.showFRLocaleFields,
 				  "ui" 	 : data.preparationStepsSec.stepsCommonUI,
 				  "step" : step
 			    }
 	);
 	//---------Step Ingredients Generation Ends
+	//---------Making the step ingredients sortable
+	var start, stop;
+	$("#ingredients-list-step_" + step.index).sortable(
+		{
+			//"handle"	: ".cr-preparation-step-header",
+			"axis"		: "y",
+			"start"	    : function(event, ui){
+							start = ui.item.index();							
+						 },
+			"stop" 	   	: function( event, ui ){
+							stop = ui.item.index();
+							var stepIndex = step.index - 1;							
+							if(start == stop){//Since element is not dragged hence returning								
+								return false;
+							}
+//							Saving the ingredient item							
+							var element = data.preparationStepsSec.steps[stepIndex].ingredients[start];
+//							Removing from the list							
+							data.preparationStepsSec.steps[stepIndex].ingredients.splice( start, 1 );							
+							if(start > stop){//It means up
+//								Swapping into the list
+								data.preparationStepsSec.steps[stepIndex].ingredients.splice( stop, 0, element );
+							}else if( start < stop ){//It means down
+//								Swapping into the list								
+								data.preparationStepsSec.steps[stepIndex].ingredients.splice( stop, 0, element );
+							}
+							sortPreparationStepIngredientsIndexField(step);
+							generateStepIngredients(step);
+						 }
+		}
+	);
 }
 
 function generateStepInstructions(step){
@@ -912,9 +944,9 @@ function getCRStepIngredientsTemplate(){
 				+"{{ ui.ingeredientsLabel }}"
 				+"<button onclick='addIngredientToAStepEH(event, {{ step.index }})'>{{ ui.addIngredientsLabel }}</button>"
 		  +"</div>"
-		  +"<div class='step-ingredients-list'>"
+		  +"<div id='ingredients-list-step_{{ step.index }}' class='step-ingredients-list'>"
 			+"{{ #step.ingredients }}"
-				+"<div name='ingredient-item' class='ingredient-item'>"
+				+"<div name='ingredient-item_{{ index }}' class='ingredient-item'>"
 								//---------Ingredient Name Input En Starts
 								+"{{ #showENLocaleFields }}"								
 									+"<label for='ingredient-name-input-en'>"
