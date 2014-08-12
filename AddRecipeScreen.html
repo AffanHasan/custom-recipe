@@ -686,7 +686,7 @@ main();
 //---------General Function Definitions Starts
 
 function main(){
-	ignition();
+	ignition();	
 }
 
 function ignition(){
@@ -721,12 +721,10 @@ function generatePreparationSteps(){
 			"handle"	: ".cr-preparation-step-header",
 			"axis"		: "y",
 			"start"	    : function(event, ui){
-							start = ui.item.index();
-							console.log(start);
+							start = ui.item.index();							
 						 },
 			"stop" 	   	: function( event, ui ){
-							stop = ui.item.index();
-							console.log(stop);
+							stop = ui.item.index();							
 							if(start == stop){//Since element is not dragged hence returning
 								generatePreparationSteps();
 								return false;
@@ -735,12 +733,10 @@ function generatePreparationSteps(){
 //							Removing from the list
 							data.preparationStepsSec.steps.splice( start, 1 );
 							if(start > stop){//It means up
-//								Swapping into the list
-								console.log(ui.item.context.nextSibling);
+//								Swapping into the list								
 								data.preparationStepsSec.steps.splice( stop,0, element );
 							}else if( start < stop ){//It means down
-//								Swapping into the list
-								console.log(ui.item.context.previousSibling);
+//								Swapping into the list								
 								data.preparationStepsSec.steps.splice( stop,0, element );
 							}
 							sortPreparationStepsIndexField();
@@ -905,8 +901,7 @@ function generateStepInstructions(step){
 		plugins : 'inlinepopups',
 	    setup : function(ed){
 			 ed.onChange.add(
-				 function(ed, l) {
-					  console.log("Called");
+				 function(ed, l) {					  
 					  stepIngredientInputEH(null, { "id" : ed.id, "index" : step.index, "type" : "instructions", "value" : l.content });
 				 }
 			);
@@ -1645,7 +1640,12 @@ function getCRAdminNotesTemplate(){
 					    +"{{ /crAdminNotesSec.adminNotesEnTextArea.mandatory }}"
 						+"<span>{{ crAdminNotesSec.adminNotesEnTextArea.label }}</span>"
 					+"</div>"
-					+"<textarea id='cr-en-a-notes-content'>{{ crAdminNotesSec.adminNotesEnTextArea.value }}</textarea>"
+					+"<textarea id='cr-en-a-notes-content'"
+						+"onchange='adminNotesInputEH(event, { value : value, key:\"crAdminNotesSec_adminNotesEnTextArea\" })'"
+						+"value='{{ crAdminNotesSec.adminNotesEnTextArea.value }}'"
+					+">"
+						+"{{ crAdminNotesSec.adminNotesEnTextArea.value }}"
+					+"</textarea>"
 			  +"</div>"
 		  +"{{ /showENLocaleFields }}"
 		  +"{{ #showFRLocaleFields }}"
@@ -1656,7 +1656,12 @@ function getCRAdminNotesTemplate(){
 					    +"{{ /crAdminNotesSec.adminNotesFrTextArea.mandatory }}"
 						+"<span>{{ crAdminNotesSec.adminNotesFrTextArea.label }}</span>"
 					+"</div>"
-					+"<textarea id='cr-fr-a-notes-content'>{{ crAdminNotesSec.adminNotesFrTextArea.value }}</textarea>"
+					+"<textarea id='cr-fr-a-notes-content'"
+						+"onchange='adminNotesInputEH(event, { value : value, key : \"crAdminNotesSec_adminNotesFrTextArea\" })'"
+						+"value='{{ crAdminNotesSec.adminNotesFrTextArea.value }}'"
+					+">"
+						+"{{ crAdminNotesSec.adminNotesFrTextArea.value }}"
+					+"</textarea>"
 			  +"</div>"
 		 +"{{ /showFRLocaleFields }}";
 }
@@ -2007,10 +2012,8 @@ function stepIngredientInputEH(event, detail){
 			});
 		break;
 		case 'instructions':			
-			if(detail.id.split("_")[1] == "en"){
-				console.log("yes");
+			if(detail.id.split("_")[1] == "en"){				
 				data.preparationStepsSec.steps[ detail.index - 1 ].instructions.enTextArea.value = detail.value;
-				console.log(data.preparationStepsSec.steps[ detail.index - 1 ].instructions.enTextArea.value);
 			}else if(detail.id.split("_")[1] == "fr"){
 				data.preparationStepsSec.steps[ detail.index - 1 ].instructions.frTextArea.value = detail.value;
 			}			
@@ -2018,8 +2021,7 @@ function stepIngredientInputEH(event, detail){
 	}
 }
 
-function moveIngredientUsingButtonEH(event, direction, ingredientIndex){
-	console.log(direction);
+function moveIngredientUsingButtonEH(event, direction, ingredientIndex){	
 	var ingredient =
 	data.preparationStepsSec.steps[ ingredientIndex.toString().split(".")[0] - 1 ].ingredients[ ingredientIndex.toString().split(".")[1] - 1 ];
 //	Deleting the ingredient
@@ -2040,11 +2042,14 @@ function nutritionalInfoInputEH(event, detail){
 		case "text":
 			data.nutritionalInfoSec[detail.key].input.value = detail.value;
 		break;
-		case "checkbox":
-			console.log(detail.value);
+		case "checkbox":			
 			data.nutritionalInfoSec[ detail.key.split("_")[0] ][ detail.key.split("_")[1] ].checked = detail.value;
 		break;
 	}	
+}
+
+function adminNotesInputEH(event, detail){
+	data[ detail.key.split("_")[0] ][ detail.key.split("_")[1] ].value = detail.value;	
 }
 //---------Event Handler Function Definitions Ends
 		</script>
